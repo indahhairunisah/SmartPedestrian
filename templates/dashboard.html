@@ -84,18 +84,18 @@
         .logo-small {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: var(--shadow-md);
+            overflow: hidden;
         }
 
-        .logo-small svg {
-            width: 20px;
-            height: 20px;
-            fill: white;
+        .logo-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .header-title {
@@ -363,20 +363,6 @@
             animation: glow-red 2s ease-in-out infinite alternate;
         }
 
-        .yellow-light {
-            background: radial-gradient(circle at 30% 30%, #feca57, #ff9f00);
-        }
-
-        .yellow-light.active {
-            background: radial-gradient(circle at 30% 30%, #ffdd59, #ffb700);
-            box-shadow: 
-                inset 0 2px 4px rgba(0, 0, 0, 0.3),
-                0 0 25px rgba(255, 193, 7, 0.7),
-                0 0 50px rgba(255, 193, 7, 0.5);
-            border-color: #ffb700;
-            animation: glow-yellow 2s ease-in-out infinite alternate;
-        }
-
         .green-light {
             background: radial-gradient(circle at 30% 30%, #5f27cd, #00d2d3);
         }
@@ -394,11 +380,6 @@
         @keyframes glow-red {
             from { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 0, 0, 0.7), 0 0 50px rgba(255, 0, 0, 0.5); }
             to { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 35px rgba(255, 0, 0, 0.9), 0 0 70px rgba(255, 0, 0, 0.7); }
-        }
-
-        @keyframes glow-yellow {
-            from { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 193, 7, 0.7), 0 0 50px rgba(255, 193, 7, 0.5); }
-            to { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 35px rgba(255, 193, 7, 0.9), 0 0 70px rgba(255, 193, 7, 0.7); }
         }
 
         @keyframes glow-green {
@@ -502,7 +483,7 @@
 
         .stat-icon.blue { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)); }
         .stat-icon.green { background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(4, 120, 87, 0.1)); }
-        .stat-icon.yellow { background: linear-gradient(135deg, rgba(217, 119, 6, 0.1), rgba(180, 83, 9, 0.1)); }
+        .stat-icon.orange { background: linear-gradient(135deg, rgba(251, 146, 60, 0.1), rgba(249, 115, 22, 0.1)); }
 
         .stat-icon svg {
             width: 24px;
@@ -511,7 +492,7 @@
 
         .stat-icon.blue svg { fill: var(--primary-color); }
         .stat-icon.green svg { fill: var(--success-color); }
-        .stat-icon.yellow svg { fill: var(--warning-color); }
+        .stat-icon.orange svg { fill: #f97316; }
 
         .stat-value {
             font-size: 2.5rem;
@@ -1253,10 +1234,7 @@
     <header class="header">
         <div class="header-left">
             <div class="logo-small">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
-                    <path d="M9 12l2 2 4-4"/>
-                </svg>
+                <img src="{{ url_for('static', filename='assets/logo_utama.png') }}" alt="Smart Pedestrian Crossing Logo">
             </div>
             <h1 class="header-title">Smart Pedestrian Crossing</h1>
         </div>
@@ -1317,7 +1295,6 @@
                         <div class="traffic-light-title">Pedestrian Light Status</div>
                         <div class="traffic-light">
                             <div class="light red-light" id="redLight"></div>
-                            <div class="light yellow-light" id="yellowLight"></div>
                             <div class="light green-light" id="greenLight"></div>
                         </div>
                         <div class="traffic-status" id="trafficStatus">MERAH</div>
@@ -1378,9 +1355,12 @@
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-title">Peak Hour</span>
-                    <div class="stat-icon yellow">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2v20M17.5 12H22M6.5 12H2M7.5 7.5L4.22 4.22M16.5 7.5l3.28-3.28M7.5 16.5l-3.28 3.28M16.5 16.5l3.28 3.28"/>
+                    <div class="stat-icon orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8 3L4 7l4 4"/>
+                            <path d="M4 7h16"/>
+                            <path d="M16 21l4-4-4-4"/>
+                            <path d="M20 17H4"/>
                         </svg>
                     </div>
                 </div>
@@ -1448,10 +1428,10 @@
 
             <div class="history-table">
                 <div class="table-header">
-                    <div class="table-title">Detail Harian</div>
+                    <div class="table-title" id="tableTitle">Detail Harian</div>
                 </div>
                 <div class="table-content">
-                    <div class="table-row">
+                    <div class="table-row" id="tableHeader">
                         <div class="table-cell"><strong>Tanggal</strong></div>
                         <div class="table-cell"><strong>Total Crossing</strong></div>
                         <div class="table-cell"><strong>Peak Hour</strong></div>
@@ -1599,7 +1579,6 @@
                         <path d="M17 18a5 5 0 0 0-10 0"></path>
                         <line x1="12" y1="2" x2="12" y2="9"></line>
                         <line x1="4.22" y1="10.22" x2="5.64" y2="11.64"></line>
-                        <line x1="1" y1="18" x2="3" y2="18"></line  x2="5.64" y2="11.64"></line>
                         <line x1="1" y1="18" x2="3" y2="18"></line>
                         <line x1="21" y1="18" x2="23" y2="18"></line>
                         <line x1="18.36" y1="11.64" x2="19.78" y2="10.22"></line>
@@ -1671,7 +1650,6 @@
         function updateTrafficLight(lightStatus) {
             // Reset all lights
             document.getElementById('redLight').classList.remove('active');
-            document.getElementById('yellowLight').classList.remove('active');
             document.getElementById('greenLight').classList.remove('active');
             
             // Activate the current light
@@ -1680,11 +1658,6 @@
                     document.getElementById('redLight').classList.add('active');
                     document.getElementById('trafficStatus').textContent = 'MERAH';
                     document.getElementById('trafficStatus').style.color = 'var(--danger-color)';
-                    break;
-                case 'KUNING':
-                    document.getElementById('yellowLight').classList.add('active');
-                    document.getElementById('trafficStatus').textContent = 'KUNING';
-                    document.getElementById('trafficStatus').style.color = 'var(--warning-color)';
                     break;
                 case 'HIJAU':
                     document.getElementById('greenLight').classList.add('active');
@@ -1695,10 +1668,10 @@
         }
 
         function simulateData() {
-            // Simulate changing traffic light
-            const lights = ['MERAH', 'HIJAU', 'KUNING'];
-            const lightColors = ['status-red', 'status-green', 'status-yellow'];
-            const currentLight = Math.floor(Math.random() * 3);
+            // Simulate changing traffic light (only red and green)
+            const lights = ['MERAH', 'HIJAU'];
+            const lightColors = ['status-red', 'status-green'];
+            const currentLight = Math.floor(Math.random() * 2);
             const currentLightStatus = lights[currentLight];
             
             const lightElement = document.getElementById('lightStatus');
@@ -1833,45 +1806,164 @@
                 dateRangePicker.style.display = 'none';
             }
             
-            // Update chart
+            // Update table title and header based on period
+            updateTableTitleAndHeader(period);
+            
+            // Update chart and table
             generateChartData(period);
             updateChart();
+            updateHistoryTable(period);
+        }
+
+        function updateTableTitleAndHeader(period) {
+            const tableTitle = document.getElementById('tableTitle');
+            const tableHeader = document.getElementById('tableHeader');
+            
+            switch(period) {
+                case 'today':
+                    tableTitle.textContent = 'Detail Per Jam';
+                    tableHeader.innerHTML = `
+                        <div class="table-cell"><strong>Jam</strong></div>
+                        <div class="table-cell"><strong>Total Crossing</strong></div>
+                        <div class="table-cell"><strong>Peak Period</strong></div>
+                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                    `;
+                    break;
+                case 'week':
+                    tableTitle.textContent = 'Detail Harian';
+                    tableHeader.innerHTML = `
+                        <div class="table-cell"><strong>Hari</strong></div>
+                        <div class="table-cell"><strong>Total Crossing</strong></div>
+                        <div class="table-cell"><strong>Peak Hour</strong></div>
+                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                    `;
+                    break;
+                case 'month':
+                    tableTitle.textContent = 'Detail Harian';
+                    tableHeader.innerHTML = `
+                        <div class="table-cell"><strong>Tanggal</strong></div>
+                        <div class="table-cell"><strong>Total Crossing</strong></div>
+                        <div class="table-cell"><strong>Peak Hour</strong></div>
+                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                    `;
+                    break;
+                case 'custom':
+                    tableTitle.textContent = 'Detail Periode';
+                    tableHeader.innerHTML = `
+                        <div class="table-cell"><strong>Periode</strong></div>
+                        <div class="table-cell"><strong>Total Crossing</strong></div>
+                        <div class="table-cell"><strong>Peak Hour</strong></div>
+                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                    `;
+                    break;
+            }
         }
 
         function updateHistoryTable(period) {
             const tableData = document.getElementById('historyTableData');
             let rows = '';
             
-            // Generate sample data based on period
-            const days = period === 'today' ? 1 : period === 'week' ? 7 : 30;
-            
-            for (let i = 0; i < Math.min(days, 10); i++) {
-                const date = new Date();
-                date.setDate(date.getDate() - i);
-                const dateStr = date.toLocaleDateString('id-ID', { 
-                    day: '2-digit', 
-                    month: '2-digit', 
-                    year: 'numeric' 
-                });
-                
-                const crossings = Math.floor(Math.random() * 100) + 200;
-                const peakHour = Math.floor(Math.random() * 4) + 16 + ':' + (Math.floor(Math.random() * 6) * 10);
-                const duration = Math.floor(Math.random() * 20) + 25 + 's';
-                
-                const detailData = generateDetailData(dateStr, crossings, period);
-                
-                rows += `
-                    <div class="table-row" onclick="showDetailModal({
-                        label: '${dateStr}',
-                        value: ${crossings},
-                        details: ${JSON.stringify(detailData).replace(/"/g, '&quot;')}
-                    })">
-                        <div class="table-cell">${dateStr}</div>
-                        <div class="table-cell">${crossings}</div>
-                        <div class="table-cell">${peakHour}</div>
-                        <div class="table-cell">${duration}</div>
-                    </div>
-                `;
+            switch(period) {
+                case 'today':
+                    // Show hourly data for today
+                    const hours = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
+                    hours.forEach((hour, index) => {
+                        const crossings = Math.floor(Math.random() * 100) + 50;
+                        const peakPeriod = crossings > 120 ? 'Ya' : 'Tidak';
+                        const duration = Math.floor(Math.random() * 20) + 25 + 's';
+                        
+                        const detailData = generateDetailData(hour, crossings, period);
+                        
+                        rows += `
+                            <div class="table-row" onclick="showDetailModal({
+                                label: '${hour}',
+                                value: ${crossings},
+                                details: ${JSON.stringify(detailData).replace(/"/g, '&quot;')}
+                            })">
+                                <div class="table-cell">${hour}</div>
+                                <div class="table-cell">${crossings}</div>
+                                <div class="table-cell">${peakPeriod}</div>
+                                <div class="table-cell">${duration}</div>
+                            </div>
+                        `;
+                    });
+                    break;
+                    
+                case 'week':
+                    // Show daily data for this week
+                    const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+                    days.forEach((day, index) => {
+                        const crossings = Math.floor(Math.random() * 200) + 150;
+                        const peakHour = Math.floor(Math.random() * 4) + 16 + ':' + (Math.floor(Math.random() * 6) * 10);
+                        const duration = Math.floor(Math.random() * 20) + 25 + 's';
+                        
+                        const detailData = generateDetailData(day, crossings, period);
+                        
+                        rows += `
+                            <div class="table-row" onclick="showDetailModal({
+                                label: '${day}',
+                                value: ${crossings},
+                                details: ${JSON.stringify(detailData).replace(/"/g, '&quot;')}
+                            })">
+                                <div class="table-cell">${day}</div>
+                                <div class="table-cell">${crossings}</div>
+                                <div class="table-cell">${peakHour}</div>
+                                <div class="table-cell">${duration}</div>
+                            </div>
+                        `;
+                    });
+                    break;
+                    
+                case 'month':
+                    // Show daily data for the month (last 30 days)
+                    for (let i = 0; i < 30; i++) {
+                        const date = new Date();
+                        date.setDate(date.getDate() - i);
+                        const dateStr = date.toLocaleDateString('id-ID', { 
+                            day: '2-digit', 
+                            month: '2-digit', 
+                            year: 'numeric' 
+                        });
+                        
+                        const crossings = Math.floor(Math.random() * 300) + 100;
+                        const peakHour = Math.floor(Math.random() * 4) + 16 + ':' + (Math.floor(Math.random() * 6) * 10);
+                        const duration = Math.floor(Math.random() * 20) + 25 + 's';
+                        
+                        const detailData = generateDetailData(dateStr, crossings, period);
+                        
+                        rows += `
+                            <div class="table-row" onclick="showDetailModal({
+                                label: '${dateStr}',
+                                value: ${crossings},
+                                details: ${JSON.stringify(detailData).replace(/"/g, '&quot;')}
+                            })">
+                                <div class="table-cell">${dateStr}</div>
+                                <div class="table-cell">${crossings}</div>
+                                <div class="table-cell">${peakHour}</div>
+                                <div class="table-cell">${duration}</div>
+                            </div>
+                        `;
+                        
+                        if (i >= 9) break; // Limit to 10 rows for display
+                    }
+                    break;
+                    
+                case 'custom':
+                    // Show data based on custom period (use chart data)
+                    chartData.forEach((data) => {
+                        const peakHour = data.details.peakHour;
+                        const duration = data.details.avgDuration;
+                        
+                        rows += `
+                            <div class="table-row" onclick="showDetailModal(${JSON.stringify(data).replace(/"/g, '&quot;')})">
+                                <div class="table-cell">${data.label}</div>
+                                <div class="table-cell">${data.value}</div>
+                                <div class="table-cell">${peakHour}</div>
+                                <div class="table-cell">${duration}</div>
+                            </div>
+                        `;
+                    });
+                    break;
             }
             
             tableData.innerHTML = rows;
@@ -1903,6 +1995,11 @@
                     <div class="modal-card-title">Durasi Rata-rata</div>
                     <div class="modal-card-value">${data.details.avgDuration}</div>
                     <div class="modal-card-description">Waktu rata-rata penyeberangan</div>
+                </div>
+                <div class="modal-card">
+                    <div class="modal-card-title">Efisiensi Sistem</div>
+                    <div class="modal-card-value">${data.details.efficiency}</div>
+                    <div class="modal-card-description">Tingkat efisiensi deteksi sistem</div>
                 </div>
             `;
             
@@ -1947,6 +2044,7 @@
             if (startDate && endDate) {
                 generateCustomChartData(startDate, endDate);
                 updateChart();
+                updateHistoryTable('custom');
             }
         }
 
@@ -2045,11 +2143,10 @@
             // Initialize traffic light with red
             updateTrafficLight('MERAH');
             
-            // Initialize chart
+            // Initialize chart and table
             generateChartData('today');
             updateChart();
-            
-            // Initialize table
+            updateTableTitleAndHeader('today');
             updateHistoryTable('today');
             
             // Start time updates
