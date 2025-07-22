@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Pedestrian Crossing - Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary-color: #f1f5f9;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --background-color: #ffffff;
+            --surface-color: #f8fafc;
+            --surface-secondary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --border-light: #f1f5f9;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #60a5fa;
+            --primary-dark: #3b82f6;
+            --primary-light: #93c5fd;
+            --secondary-color: #1e293b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --background-color: #0f172a;
+            --surface-color: #1e293b;
+            --surface-secondary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --border-light: #475569;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-small {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-small svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.025em;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .theme-toggle:hover svg {
+            fill: white;
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            background: var(--surface-secondary);
+            border-radius: 10px;
+            border: 1px solid var(--border-light);
+        }
+
+        .logout-btn {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.625rem 1.25rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .live-cam-section {
+            background: var(--surface-color);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .cam-content {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .section-title {
+            font-size: 1.375rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.025em;
+        }
+
+        .live-indicator {
+            width: 10px;
+            height: 10px;
+            background: var(--danger-color);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+            }
+        }
+
+        .cam-container {
+            background: #000;
+            border-radius: 16px;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .cam-placeholder {
+            color: #666;
+            font-size: 1.125rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .cam-overlay {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Traffic Light Styles */
+        .traffic-light-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .traffic-light-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .traffic-light {
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border-radius: 24px;
+            padding: 1.25rem 1rem;
+            box-shadow: 
+                inset 0 2px 4px rgba(255, 255, 255, 0.1),
+                var(--shadow-lg);
+            border: 2px solid #333;
+            position: relative;
+        }
+
+        .traffic-light::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            background: #333;
+            border-radius: 50% 50% 0 0;
+        }
+
+        .traffic-light::after {
+            content: '';
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 18px;
+            background: #555;
+            border-radius: 3px;
+        }
+
+        .light {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            margin: 0.75rem 0;
+            border: 3px solid #444;
+            transition: all 0.4s ease;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .light::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 14px;
+            width: 22px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .light.active::before {
+            opacity: 1;
+        }
+
+        .red-light {
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #cc0000);
+        }
+
+        .red-light.active {
+            background: radial-gradient(circle at 30% 30%, #ff4757, #ff0000);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 0 25px rgba(255, 0, 0, 0.7),
+                0 0 50px rgba(255, 0, 0, 0.5);
+            border-color: #ff0000;
+            animation: glow-red 2s ease-in-out infinite alternate;
+        }
+
+        .yellow-light {
+            background: radial-gradient(circle at 30% 30%, #feca57, #ff9f00);
+        }
+
+        .yellow-light.active {
+            background: radial-gradient(circle at 30% 30%, #ffdd59, #ffb700);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 0 25px rgba(255, 193, 7, 0.7),
+                0 0 50px rgba(255, 193, 7, 0.5);
+            border-color: #ffb700;
+            animation: glow-yellow 2s ease-in-out infinite alternate;
+        }
+
+        .green-light {
+            background: radial-gradient(circle at 30% 30%, #5f27cd, #00d2d3);
+        }
+
+        .green-light.active {
+            background: radial-gradient(circle at 30% 30%, #26de81, #20bf6b);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 0 25px rgba(0, 255, 0, 0.7),
+                0 0 50px rgba(0, 255, 0, 0.5);
+            border-color: #20bf6b;
+            animation: glow-green 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow-red {
+            from { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 0, 0, 0.7), 0 0 50px rgba(255, 0, 0, 0.5); }
+            to { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 35px rgba(255, 0, 0, 0.9), 0 0 70px rgba(255, 0, 0, 0.7); }
+        }
+
+        @keyframes glow-yellow {
+            from { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 193, 7, 0.7), 0 0 50px rgba(255, 193, 7, 0.5); }
+            to { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 35px rgba(255, 193, 7, 0.9), 0 0 70px rgba(255, 193, 7, 0.7); }
+        }
+
+        @keyframes glow-green {
+            from { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 25px rgba(0, 255, 0, 0.7), 0 0 50px rgba(0, 255, 0, 0.5); }
+            to { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 35px rgba(0, 255, 0, 0.9), 0 0 70px rgba(0, 255, 0, 0.7); }
+        }
+
+        .traffic-status {
+            text-align: center;
+            margin-top: 0.75rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .status-panel {
+            background: var(--surface-color);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .status-value {
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        .status-green { color: var(--success-color); }
+        .status-red { color: var(--danger-color); }
+        .status-yellow { color: var(--warning-color); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--surface-color);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-icon.blue { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)); }
+        .stat-icon.green { background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(4, 120, 87, 0.1)); }
+        .stat-icon.yellow { background: linear-gradient(135deg, rgba(217, 119, 6, 0.1), rgba(180, 83, 9, 0.1)); }
+        .stat-icon.purple { background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.1)); }
+
+        .stat-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .stat-icon.blue svg { fill: var(--primary-color); }
+        .stat-icon.green svg { fill: var(--success-color); }
+        .stat-icon.yellow svg { fill: var(--warning-color); }
+        .stat-icon.purple svg { fill: #8b5cf6; }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .stat-description {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .current-time {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--surface-color);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .time-display {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: -0.025em;
+        }
+
+        .date-display {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* History Section */
+        .history-section {
+            background: var(--surface-color);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+            margin-top: 2rem;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .period-selector {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--surface-secondary);
+            padding: 0.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+        }
+
+        .period-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .period-btn.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .period-btn:hover:not(.active) {
+            background: var(--background-color);
+            color: var(--text-primary);
+        }
+
+        .date-range-picker {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .date-input {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--background-color);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .date-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Traffic Trend Chart */
+        .trend-chart-section {
+            background: var(--background-color);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .legend-color.pedestrians { background: var(--primary-color); }
+        .legend-color.peak { background: var(--warning-color); }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .chart-grid {
+            position: absolute;
+            top: 1rem;
+            left: 3rem;
+            right: 1rem;
+            bottom: 3rem;
+            display: grid;
+            grid-template-rows: repeat(5, 1fr);
+        }
+
+        .grid-line {
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .grid-line:last-child {
+            border-bottom: none;
+        }
+
+        .y-axis-label {
+            position: absolute;
+            left: -2.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .chart-bars {
+            position: absolute;
+            bottom: 3rem;
+            left: 3rem;
+            right: 1rem;
+            height: calc(100% - 4rem);
+            display: flex;
+            align-items: end;
+            gap: 0.5rem;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--primary-color), var(--primary-light));
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 10px;
+        }
+
+        .chart-bar:hover {
+            background: linear-gradient(to top, var(--primary-dark), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .chart-bar.peak {
+            background: linear-gradient(to top, var(--warning-color), #fbbf24);
+        }
+
+        .chart-bar.peak:hover {
+            background: linear-gradient(to top, #d97706, var(--warning-color));
+        }
+
+        .bar-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: var(--background-color);
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .bar-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid transparent;
+            border-top-color: var(--text-primary);
+        }
+
+        .chart-bar:hover .bar-tooltip {
+            opacity: 1;
+        }
+
+        .x-axis {
+            position: absolute;
+            bottom: 1rem;
+            left: 3rem;
+            right: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .x-axis-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .history-card {
+            background: var(--background-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .history-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .history-card-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .history-card-value {
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .history-card-change {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .change-positive { color: var(--success-color); }
+        .change-negative { color: var(--danger-color); }
+        .change-neutral { color: var(--text-muted); }
+
+        .history-table {
+            background: var(--background-color);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+        }
+
+        .table-header {
+            background: var(--surface-secondary);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .table-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .table-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .table-row:hover {
+            background: var(--surface-color);
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-cell {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .table-cell.secondary {
+            color: var(--text-secondary);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(3px);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: var(--surface-color);
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow-y: auto;
+    margin: 1rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.modal-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.modal-close:hover {
+    background: var(--background-color);
+    color: var(--text-primary);
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.modal-card {
+    background: var(--background-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+.modal-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.modal-card-title {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.modal-card-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.modal-card-description {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.detail-section {
+    margin-bottom: 2.5rem;
+    background: var(--background-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-light);
+}
+
+.detail-section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.detail-section-title svg {
+    width: 20px;
+    height: 20px;
+    color: var(--primary-color);
+}
+
+.detail-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.detail-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-light);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.detail-list li:hover {
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow);
+}
+
+.detail-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.detail-value {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+        
+
+        .export-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.625rem 1.25rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.export-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.export-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.export-success {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--success-color);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.export-success.active {
+    opacity: 1;
+    visibility: visible;
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="logo-small">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
+                    <path d="M9 12l2 2 4-4"/>
+                </svg>
+            </div>
+            <h1 class="header-title">Smart Pedestrian Crossing</h1>
+        </div>
+        <div class="header-right">
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <svg class="sun-icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/>
+                    <line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+                <svg class="moon-icon" viewBox="0 0 24 24" style="display: none;">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button>
+            <div class="user-info">
+                <span>Admin User</span>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="current-time">
+            <div class="time-display" id="currentTime">--:--:--</div>
+            <div class="date-display" id="currentDate">-- -- ----</div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="live-cam-section">
+                <h2 class="section-title">
+                    <span class="live-indicator"></span>
+                    Live Camera Feed
+                </h2>
+                <div class="cam-content">
+                    <div class="cam-container">
+                        <div class="cam-placeholder">
+                            📹 Live Camera Feed<br>
+                            <small>Pedestrian Crossing View</small>
+                        </div>
+                        <div class="cam-overlay">LIVE</div>
+                    </div>
+                    
+                    <div class="traffic-light-container">
+                        <div class="traffic-light-title">Pedestrian Light Status</div>
+                        <div class="traffic-light">
+                            <div class="light red-light" id="redLight"></div>
+                            <div class="light yellow-light" id="yellowLight"></div>
+                            <div class="light green-light" id="greenLight"></div>
+                        </div>
+                        <div class="traffic-status" id="trafficStatus">MERAH</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-panel">
+                <h2 class="section-title">Status Saat Ini</h2>
+                <div class="status-item">
+                    <span class="status-label">Status Lampu</span>
+                    <span class="status-value status-red" id="lightStatus">MERAH</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Jumlah Penyebrang</span>
+                    <span class="status-value" id="peopleCount">3 orang</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Waktu Tunggu</span>
+                    <span class="status-value status-yellow" id="waitTime">45 detik</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Status Sistem</span>
+                    <span class="status-value status-green" id="systemStatus">AKTIF</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Statistik Crossing Hari Ini</span>
+                    <div class="stat-icon blue">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 3v18h18"/>
+                            <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="todayCrossings">247</div>
+                <div class="stat-description">Total penyeberangan hari ini</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Rata-rata Durasi Crossing</span>
+                    <div class="stat-icon green">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="avgDuration">32s</div>
+                <div class="stat-description">Waktu rata-rata penyeberangan</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Peak Hour</span>
+                    <div class="stat-icon yellow">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2v20M17.5 12H22M6.5 12H2M7.5 7.5L4.22 4.22M16.5 7.5l3.28-3.28M7.5 16.5l-3.28 3.28M16.5 16.5l3.28 3.28"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="peakHour">17:30</div>
+                <div class="stat-description">Jam tersibuk hari ini</div>
+            </div>
+
+            <!-- <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Efisiensi Sistem</span>
+                    <div class="stat-icon purple">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="efficiency">94%</div>
+                <div class="stat-description">Tingkat efisiensi deteksi</div>
+            </div> -->
+        </div>
+
+        <!-- History Section -->
+        
+        <div class="history-section">
+            <div class="history-header">
+                <h2 class="section-title">Analisis Historis</h2>
+                <div class="period-selector">
+                    <button class="period-btn active" onclick="setPeriod('today')">Hari Ini</button>
+                    <button class="period-btn" onclick="setPeriod('week')">Minggu Ini</button>
+                    <button class="period-btn" onclick="setPeriod('month')">Bulan Ini</button>
+                    <button class="period-btn" onclick="setPeriod('custom')">Custom</button>
+                </div>
+                <div class="date-range-picker" id="dateRangePicker" style="display: none;">
+                    <input type="date" class="date-input" id="startDate" onchange="updateCustomPeriod()">
+                    <span style="color: var(--text-secondary);">sampai</span>
+                    <input type="date" class="date-input" id="endDate" onchange="updateCustomPeriod()">
+                </div>
+                <button class="export-btn" onclick="exportData()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Export Data
+                </button>
+            </div>
+
+            <!-- Traffic Trend Chart -->
+            <div class="trend-chart-section">
+                <div class="chart-header">
+                    <div class="chart-title">Tren Arus Pejalan Kaki</div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-color pedestrians"></div>
+                            <span>Jumlah Pejalan Kaki</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color peak"></div>
+                            <span>Jam Sibuk</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-grid">
+                        <div class="grid-line"><div class="y-axis-label">400</div></div>
+                        <div class="grid-line"><div class="y-axis-label">300</div></div>
+                        <div class="grid-line"><div class="y-axis-label">200</div></div>
+                        <div class="grid-line"><div class="y-axis-label">100</div></div>
+                        <div class="grid-line"><div class="y-axis-label">0</div></div>
+                    </div>
+                    <div class="chart-bars" id="chartBars">
+                        <!-- Chart bars will be generated by JavaScript -->
+                    </div>
+                    <div class="x-axis" id="chartXAxis">
+                        <!-- X-axis labels will be generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-grid">
+                <div class="history-card">
+                    <div class="history-card-title">Total Penyeberangan</div>
+                    <div class="history-card-value" id="historyTotalCrossings">1,247</div>
+                    <div class="history-card-change change-positive" id="historyTotalChange">+12% dari periode sebelumnya</div>
+                </div>
+                <div class="history-card">
+                    <div class="history-card-title">Rata-rata Harian</div>
+                    <div class="history-card-value" id="historyAvgDaily">178</div>
+                    <div class="history-card-change change-positive" id="historyAvgChange">+8% dari periode sebelumnya</div>
+                </div>
+                <div class="history-card">
+                    <div class="history-card-title">Waktu Tunggu Rata-rata</div>
+                    <div class="history-card-value" id="historyAvgWait">28s</div>
+                    <div class="history-card-change change-negative" id="historyWaitChange">-5% dari periode sebelumnya</div>
+                </div>
+                <div class="history-card">
+                    <div class="history-card-title">Efisiensi Sistem</div>
+                    <div class="history-card-value" id="historyEfficiency">96%</div>
+                    <div class="history-card-change change-positive" id="historyEfficiencyChange">+2% dari periode sebelumnya</div>
+                </div>
+            </div>
+
+            <div class="history-table">
+                <div class="table-header">
+                    <div class="table-title">Detail Harian</div>
+                </div>
+                <div class="table-content">
+                    <div class="table-row">
+                        <div class="table-cell"><strong>Tanggal</strong></div>
+                        <div class="table-cell"><strong>Total Crossing</strong></div>
+                        <div class="table-cell"><strong>Peak Hour</strong></div>
+                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                        <!-- <div class="table-cell"><strong>Efisiensi</strong></div> -->
+                    </div>
+                    <div id="historyTableData">
+                        <!-- Data will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Detail Modal -->
+    
+    <div class="export-success" id="exportSuccess">
+        Data berhasil diexport!
+    </div>
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Detail Informasi</div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-grid" id="modalSummary">
+                <!-- Summary cards will be populated by JavaScript -->
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 20V10"></path>
+                        <path d="M12 20V4"></path>
+                        <path d="M6 20v-6"></path>
+                    </svg>
+                    Analisis Lalu Lintas Pejalan Kaki
+                </div>
+                <ul class="detail-list" id="trafficAnalysis">
+                    <!-- Traffic analysis will be populated by JavaScript -->
+                </ul>
+            </div>
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    Performa Sistem
+                </div>
+                <ul class="detail-list" id="systemPerformance">
+                    <!-- System performance will be populated by JavaScript -->
+                </ul>
+            </div>
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 18a5 5 0 0 0-10 0"></path>
+                        <line x1="12" y1="2" x2="12" y2="9"></line>
+                        <line x1="4.22" y1="10.22" x2="5.64" y2="11.64"></line>
+                        <line x1="1" y1="18" x2="3" y2="18"></line>
+                        <line x1="21" y1="18" x2="23" y2="18"></line>
+                        <line x1="18.36" y1="11.64" x2="19.78" y2="10.22"></line>
+                        <line x1="23" y1="22" x2="1" y2="22"></line>
+                    </svg>
+                    Kondisi Lingkungan
+                </div>
+                <ul class="detail-list" id="environmentalConditions">
+                    <!-- Environmental conditions will be populated by JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPeriod = 'today';
+        let chartData = [];
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const sunIcon = document.querySelector('.sun-icon');
+            const moonIcon = document.querySelector('.moon-icon');
+            
+            if (newTheme === 'dark') {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID');
+            const dateString = now.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            document.getElementById('currentTime').textContent = timeString;
+            document.getElementById('currentDate').textContent = dateString;
+        }
+
+        function updateTrafficLight(lightStatus) {
+            // Reset all lights
+            document.getElementById('redLight').classList.remove('active');
+            document.getElementById('yellowLight').classList.remove('active');
+            document.getElementById('greenLight').classList.remove('active');
+            
+            // Activate the current light
+            switch(lightStatus) {
+                case 'MERAH':
+                    document.getElementById('redLight').classList.add('active');
+                    document.getElementById('trafficStatus').textContent = 'MERAH';
+                    document.getElementById('trafficStatus').style.color = 'var(--danger-color)';
+                    break;
+                case 'KUNING':
+                    document.getElementById('yellowLight').classList.add('active');
+                    document.getElementById('trafficStatus').textContent = 'KUNING';
+                    document.getElementById('trafficStatus').style.color = 'var(--warning-color)';
+                    break;
+                case 'HIJAU':
+                    document.getElementById('greenLight').classList.add('active');
+                    document.getElementById('trafficStatus').textContent = 'HIJAU';
+                    document.getElementById('trafficStatus').style.color = 'var(--success-color)';
+                    break;
+            }
+        }
+
+        function simulateData() {
+            // Simulate changing traffic light
+            const lights = ['MERAH', 'HIJAU', 'KUNING'];
+            const lightColors = ['status-red', 'status-green', 'status-yellow'];
+            const currentLight = Math.floor(Math.random() * 3);
+            const currentLightStatus = lights[currentLight];
+            
+            const lightElement = document.getElementById('lightStatus');
+            lightElement.textContent = currentLightStatus;
+            lightElement.className = 'status-value ' + lightColors[currentLight];
+            
+            // Update the animated traffic light
+            updateTrafficLight(currentLightStatus);
+            
+            // Simulate people count
+            const peopleCount = Math.floor(Math.random() * 10);
+            document.getElementById('peopleCount').textContent = peopleCount + ' orang';
+            
+            // Simulate wait time
+            const waitTime = Math.floor(Math.random() * 60) + 10;
+            document.getElementById('waitTime').textContent = waitTime + ' detik';
+            
+            // Update statistics with some variation
+            const baseCrossings = 247;
+            const variation = Math.floor(Math.random() * 20) - 10;
+            document.getElementById('todayCrossings').textContent = baseCrossings + variation;
+            
+            const avgDuration = Math.floor(Math.random() * 20) + 25;
+            document.getElementById('avgDuration').textContent = avgDuration + 's';
+        }
+
+        function generateChartData(period) {
+            chartData = [];
+            let dataPoints, labels;
+            
+            switch(period) {
+                case 'today':
+                    // Hourly data for today
+                    labels = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
+                    dataPoints = [45, 120, 85, 95, 110, 180, 220, 90];
+                    break;
+                case 'week':
+                    // Daily data for this week
+                    labels = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+                    dataPoints = [280, 320, 290, 310, 350, 180, 150];
+                    break;
+                case 'month':
+                    // Weekly data for this month
+                    labels = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'];
+                    dataPoints = [1850, 2100, 1950, 2200];
+                    break;
+                case 'custom':
+                    // Custom period is handled by updateCustomPeriod function
+                    return;
+                default:
+                    labels = ['Data 1', 'Data 2', 'Data 3', 'Data 4', 'Data 5'];
+                    dataPoints = [150, 200, 180, 220, 190];
+            }
+            
+            for (let i = 0; i < labels.length; i++) {
+                const isPeak = dataPoints[i] === Math.max(...dataPoints);
+                chartData.push({
+                    label: labels[i],
+                    value: dataPoints[i],
+                    isPeak: isPeak,
+                    details: generateDetailData(labels[i], dataPoints[i], period)
+                });
+            }
+        }
+
+        function generateDetailData(label, value, period) {
+            return {
+                date: label,
+                totalCrossings: value,
+                peakHour: `${Math.floor(Math.random() * 4) + 16}:${(Math.floor(Math.random() * 6) * 10).toString().padStart(2, '0')}`,
+                avgDuration: `${Math.floor(Math.random() * 20) + 25}s`,
+                efficiency: `${Math.floor(Math.random() * 10) + 90}%`,
+                weather: ['Cerah', 'Berawan', 'Hujan Ringan'][Math.floor(Math.random() * 3)],
+                temperature: `${Math.floor(Math.random() * 10) + 25}°C`,
+                visibility: `${Math.floor(Math.random() * 5) + 8}/10`,
+                systemUptime: `${Math.floor(Math.random() * 5) + 95}%`,
+                detectionAccuracy: `${Math.floor(Math.random() * 8) + 92}%`,
+                responseTime: `${Math.floor(Math.random() * 500) + 100}ms`,
+                maintenanceStatus: ['Normal', 'Perlu Perhatian', 'Optimal'][Math.floor(Math.random() * 3)],
+                trafficPattern: ['Normal', 'Tinggi', 'Rendah'][Math.floor(Math.random() * 3)],
+                safetyIncidents: Math.floor(Math.random() * 3),
+                avgWaitTime: `${Math.floor(Math.random() * 30) + 20}s`,
+                peakTrafficDuration: `${Math.floor(Math.random() * 60) + 30} menit`
+            };
+        }
+
+        function updateChart() {
+            const chartBars = document.getElementById('chartBars');
+            const chartXAxis = document.getElementById('chartXAxis');
+            
+            // Clear existing content
+            chartBars.innerHTML = '';
+            chartXAxis.innerHTML = '';
+            
+            const maxValue = Math.max(...chartData.map(d => d.value));
+            
+            // Create bars
+            chartData.forEach((data, index) => {
+                const bar = document.createElement('div');
+                bar.className = `chart-bar ${data.isPeak ? 'peak' : ''}`;
+                bar.style.height = `${(data.value / maxValue) * 100}%`;
+                bar.onclick = () => showDetailModal(data);
+                
+                const tooltip = document.createElement('div');
+                tooltip.className = 'bar-tooltip';
+                tooltip.textContent = `${data.label}: ${data.value} pejalan kaki`;
+                bar.appendChild(tooltip);
+                
+                chartBars.appendChild(bar);
+                
+                // Create x-axis label
+                const label = document.createElement('div');
+                label.className = 'x-axis-label';
+                label.textContent = data.label;
+                chartXAxis.appendChild(label);
+            });
+        }
+
+        function setPeriod(period) {
+            currentPeriod = period;
+            
+            // Update active button
+            document.querySelectorAll('.period-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide date picker
+            const dateRangePicker = document.getElementById('dateRangePicker');
+            if (period === 'custom') {
+                dateRangePicker.style.display = 'flex';
+            } else {
+                dateRangePicker.style.display = 'none';
+            }
+            
+            // Update history data and chart
+            updateHistoryData(period);
+            generateChartData(period);
+            updateChart();
+        }
+
+        function updateHistoryData(period) {
+            // Simulate different data based on period
+            let totalCrossings, avgDaily, avgWait, efficiency;
+            let totalChange, avgChange, waitChange, efficiencyChange;
+            
+            switch(period) {
+                case 'today':
+                    totalCrossings = '247';
+                    avgDaily = '247';
+                    avgWait = '32s';
+                    efficiency = '94%';
+                    totalChange = '+5% dari kemarin';
+                    avgChange = '+5% dari kemarin';
+                    waitChange = '-3% dari kemarin';
+                    efficiencyChange = '+1% dari kemarin';
+                    break;
+                case 'week':
+                    totalCrossings = '1,734';
+                    avgDaily = '248';
+                    avgWait = '29s';
+                    efficiency = '96%';
+                    totalChange = '+12% dari minggu lalu';
+                    avgChange = '+8% dari minggu lalu';
+                    waitChange = '-5% dari minggu lalu';
+                    efficiencyChange = '+2% dari minggu lalu';
+                    break;
+                case 'month':
+                    totalCrossings = '7,456';
+                    avgDaily = '241';
+                    avgWait = '31s';
+                    efficiency = '95%';
+                    totalChange = '+18% dari bulan lalu';
+                    avgChange = '+15% dari bulan lalu';
+                    waitChange = '-2% dari bulan lalu';
+                    efficiencyChange = '+3% dari bulan lalu';
+                    break;
+                default:
+                    totalCrossings = '1,247';
+                    avgDaily = '178';
+                    avgWait = '28s';
+                    efficiency = '96%';
+                    totalChange = '+12% dari periode sebelumnya';
+                    avgChange = '+8% dari periode sebelumnya';
+                    waitChange = '-5% dari periode sebelumnya';
+                    efficiencyChange = '+2% dari periode sebelumnya';
+            }
+            
+            // Update history cards
+            document.getElementById('historyTotalCrossings').textContent = totalCrossings;
+            document.getElementById('historyAvgDaily').textContent = avgDaily;
+            document.getElementById('historyAvgWait').textContent = avgWait;
+            document.getElementById('historyEfficiency').textContent = efficiency;
+            
+            document.getElementById('historyTotalChange').textContent = totalChange;
+            document.getElementById('historyAvgChange').textContent = avgChange;
+            document.getElementById('historyWaitChange').textContent = waitChange;
+            document.getElementById('historyEfficiencyChange').textContent = efficiencyChange;
+            
+            // Update table data
+            updateHistoryTable(period);
+        }
+
+        function updateHistoryTable(period) {
+            const tableData = document.getElementById('historyTableData');
+            let rows = '';
+            
+            // Generate sample data based on period
+            const days = period === 'today' ? 1 : period === 'week' ? 7 : 30;
+            
+            for (let i = 0; i < Math.min(days, 10); i++) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toLocaleDateString('id-ID', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric' 
+                });
+                
+                const crossings = Math.floor(Math.random() * 100) + 200;
+                const peakHour = Math.floor(Math.random() * 4) + 16 + ':' + (Math.floor(Math.random() * 6) * 10);
+                const duration = Math.floor(Math.random() * 20) + 25 + 's';
+                const eff = Math.floor(Math.random() * 10) + 90 + '%';
+                
+                const detailData = generateDetailData(dateStr, crossings, period);
+                
+                rows += `
+                    <div class="table-row" onclick="showDetailModal({
+                        label: '${dateStr}',
+                        value: ${crossings},
+                        details: ${JSON.stringify(detailData).replace(/"/g, '&quot;')}
+                    })">
+                        <div class="table-cell">${dateStr}</div>
+                        <div class="table-cell">${crossings}</div>
+                        <div class="table-cell">${peakHour}</div>
+                        <div class="table-cell">${duration}</div>
+                        <div class="table-cell">${eff}</div>
+                    </div>
+                `;
+            }
+            
+            tableData.innerHTML = rows;
+        }
+
+        function showDetailModal(data) {
+            const modal = document.getElementById('detailModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSummary = document.getElementById('modalSummary');
+            const trafficAnalysis = document.getElementById('trafficAnalysis');
+            const systemPerformance = document.getElementById('systemPerformance');
+            const environmentalConditions = document.getElementById('environmentalConditions');
+            
+            // Set modal title
+            modalTitle.textContent = `Detail Analisis - ${data.label}`;
+            
+            // Create summary cards
+            modalSummary.innerHTML = `
+        <div class="modal-card">
+            <div class="modal-card-title">Total Penyeberangan</div>
+            <div class="modal-card-value">${data.value}</div>
+            <div class="modal-card-description">Jumlah total pejalan kaki yang menyeberang</div>
+        </div>
+        <div class="modal-card">
+            <div class="modal-card-title">Jam Sibuk</div>
+            <div class="modal-card-value">${data.details.peakHour}</div>
+            <div class="modal-card-description">Waktu dengan aktivitas tertinggi</div>
+        </div>
+        <div class="modal-card">
+            <div class="modal-card-title">Durasi Rata-rata</div>
+            <div class="modal-card-value">${data.details.avgDuration}</div>
+            <div class="modal-card-description">Waktu rata-rata penyeberangan</div>
+        </div>
+        <div class="modal-card">
+            <div class="modal-card-title">Efisiensi Sistem</div>
+            <div class="modal-card-value">${data.details.efficiency}</div>
+            <div class="modal-card-description">Tingkat efisiensi deteksi sistem</div>
+        </div>
+    `;
+            
+            // Traffic analysis details
+            trafficAnalysis.innerHTML = `
+        <li><span class="detail-label">Pola Lalu Lintas</span><span class="detail-value">${data.details.trafficPattern}</span></li>
+        <li><span class="detail-label">Durasi Jam Sibuk</span><span class="detail-value">${data.details.peakTrafficDuration}</span></li>
+        <li><span class="detail-label">Waktu Tunggu Rata-rata</span><span class="detail-value">${data.details.avgWaitTime}</span></li>
+        <li><span class="detail-label">Insiden Keselamatan</span><span class="detail-value">${data.details.safetyIncidents} kejadian</span></li>
+        <li><span class="detail-label">Tingkat Kepadatan</span><span class="detail-value">${data.value > 200 ? 'Tinggi' : data.value > 100 ? 'Sedang' : 'Rendah'}</span></li>
+        <li><span class="detail-label">Frekuensi Penyeberangan</span><span class="detail-value">${Math.floor(data.value / 24)} per jam</span></li>
+    `;
+            
+            // System performance details
+            systemPerformance.innerHTML = `
+        <li><span class="detail-label">Uptime Sistem</span><span class="detail-value">${data.details.systemUptime}</span></li>
+        <li><span class="detail-label">Akurasi Deteksi</span><span class="detail-value">${data.details.detectionAccuracy}</span></li>
+        <li><span class="detail-label">Response Time</span><span class="detail-value">${data.details.responseTime}</span></li>
+        <li><span class="detail-label">Status Maintenance</span><span class="detail-value">${data.details.maintenanceStatus}</span></li>
+        <li><span class="detail-label">Kualitas Sinyal</span><span class="detail-value">${Math.floor(Math.random() * 20) + 80}%</span></li>
+        <li><span class="detail-label">Error Rate</span><span class="detail-value">${(Math.random() * 2).toFixed(2)}%</span></li>
+    `;
+            
+            // Environmental conditions details
+            environmentalConditions.innerHTML = `
+        <li><span class="detail-label">Cuaca</span><span class="detail-value">${data.details.weather}</span></li>
+        <li><span class="detail-label">Suhu</span><span class="detail-value">${data.details.temperature}</span></li>
+        <li><span class="detail-label">Visibilitas</span><span class="detail-value">${data.details.visibility}</span></li>
+        <li><span class="detail-label">Kelembaban</span><span class="detail-value">${Math.floor(Math.random() * 30) + 60}%</span></li>
+        <li><span class="detail-label">Kecepatan Angin</span><span class="detail-value">${Math.floor(Math.random() * 15) + 5} km/h</span></li>
+        <li><span class="detail-label">Kondisi Pencahayaan</span><span class="detail-value">${['Baik', 'Sedang', 'Kurang'][Math.floor(Math.random() * 3)]}</span></li>
+    `;
+            
+            // Show modal
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('detailModal');
+            modal.classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        function updateCustomPeriod() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    
+    if (startDate && endDate) {
+        generateCustomChartData(startDate, endDate);
+        updateChart();
+        updateHistoryData('custom');
+    }
+}
+
+function generateCustomChartData(startDate, endDate) {
+    chartData = [];
+    
+    // Convert string dates to Date objects
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    // Calculate the difference in days
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    
+    // If more than 14 days, group by weeks
+    if (diffDays > 14) {
+        const weeks = Math.ceil(diffDays / 7);
+        for (let i = 0; i < weeks; i++) {
+            const weekStart = new Date(start);
+            weekStart.setDate(start.getDate() + (i * 7));
+            
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            
+            if (weekEnd > end) {
+                weekEnd.setTime(end.getTime());
+            }
+            
+            const weekStartStr = weekStart.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
+            const weekEndStr = weekEnd.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
+            
+            const label = `${weekStartStr} - ${weekEndStr}`;
+            const value = Math.floor(Math.random() * 1000) + 500;
+            const isPeak = i === Math.floor(weeks / 2); // Just for demo
+            
+            chartData.push({
+                label: label,
+                value: value,
+                isPeak: isPeak,
+                details: generateDetailData(label, value, 'custom')
+            });
+        }
+    } else {
+        // Show daily data
+        for (let i = 0; i < diffDays; i++) {
+            const currentDate = new Date(start);
+            currentDate.setDate(start.getDate() + i);
+            
+            const dateStr = currentDate.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
+            const value = Math.floor(Math.random() * 300) + 100;
+            const isPeak = i === Math.floor(diffDays / 2); // Just for demo
+            
+            chartData.push({
+                label: dateStr,
+                value: value,
+                isPeak: isPeak,
+                details: generateDetailData(dateStr, value, 'custom')
+            });
+        }
+    }
+}
+
+function exportData() {
+    // Show export success notification
+    const exportSuccess = document.getElementById('exportSuccess');
+    exportSuccess.classList.add('active');
+    
+    // Hide notification after 3 seconds
+    setTimeout(() => {
+        exportSuccess.classList.remove('active');
+    }, 3000);
+    
+    // In a real application, this would generate and download a CSV/PDF file
+    // For this demo, we'll just simulate the export
+    
+    console.log('Exporting data for period:', currentPeriod);
+    console.log('Chart data:', chartData);
+    
+    // Here you would typically use a library like jsPDF, html2canvas, or 
+    // create a CSV file and trigger a download
+}
+
+        // Load saved theme and initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const sunIcon = document.querySelector('.sun-icon');
+            const moonIcon = document.querySelector('.moon-icon');
+            
+            if (savedTheme === 'dark') {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+            
+            // Initialize traffic light with red
+            updateTrafficLight('MERAH');
+            
+            // Initialize history data and chart
+            updateHistoryData('today');
+            generateChartData('today');
+            updateChart();
+            
+            // Start time updates
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            // Start data simulation
+            simulateData();
+            setInterval(simulateData, 5000);
+            
+            // Set default dates for custom period and add event listeners
+const today = new Date();
+const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+document.getElementById('startDate').value = weekAgo.toISOString().split('T')[0];
+document.getElementById('endDate').value = today.toISOString().split('T')[0];
+
+// Add event listeners for date inputs
+document.getElementById('startDate').addEventListener('change', updateCustomPeriod);
+document.getElementById('endDate').addEventListener('change', updateCustomPeriod);
+        });
+    </script>
+</body>
+</html>
