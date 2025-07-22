@@ -64,7 +64,7 @@
         .header {
             background: var(--surface-color);
             border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -111,7 +111,7 @@
             gap: 1rem;
         }
 
-        .theme-toggle {
+        .info-btn, .theme-toggle {
             background: var(--background-color);
             border: 1px solid var(--border-color);
             border-radius: 10px;
@@ -125,18 +125,18 @@
             box-shadow: var(--shadow);
         }
 
-        .theme-toggle:hover {
+        .info-btn:hover, .theme-toggle:hover {
             background: var(--primary-color);
             border-color: var(--primary-color);
             transform: translateY(-1px);
             box-shadow: var(--shadow-md);
         }
 
-        .theme-toggle:hover svg {
+        .info-btn:hover svg, .theme-toggle:hover svg {
             fill: white;
         }
 
-        .theme-toggle svg {
+        .info-btn svg, .theme-toggle svg {
             width: 20px;
             height: 20px;
             fill: var(--text-secondary);
@@ -175,16 +175,16 @@
         }
 
         .main-content {
-            padding: 2rem;
-            max-width: 1400px;
+            padding: 1.5rem;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .live-cam-section {
@@ -455,9 +455,9 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .stat-card {
@@ -503,7 +503,6 @@
         .stat-icon.blue { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)); }
         .stat-icon.green { background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(4, 120, 87, 0.1)); }
         .stat-icon.yellow { background: linear-gradient(135deg, rgba(217, 119, 6, 0.1), rgba(180, 83, 9, 0.1)); }
-        .stat-icon.purple { background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.1)); }
 
         .stat-icon svg {
             width: 24px;
@@ -513,7 +512,6 @@
         .stat-icon.blue svg { fill: var(--primary-color); }
         .stat-icon.green svg { fill: var(--success-color); }
         .stat-icon.yellow svg { fill: var(--warning-color); }
-        .stat-icon.purple svg { fill: #8b5cf6; }
 
         .stat-value {
             font-size: 2.5rem;
@@ -789,52 +787,6 @@
             text-align: center;
         }
 
-        .history-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .history-card {
-            background: var(--background-color);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-        }
-
-        .history-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .history-card-title {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .history-card-value {
-            font-size: 1.875rem;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .history-card-change {
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-
-        .change-positive { color: var(--success-color); }
-        .change-negative { color: var(--danger-color); }
-        .change-neutral { color: var(--text-muted); }
-
         .history-table {
             background: var(--background-color);
             border-radius: 16px;
@@ -862,7 +814,7 @@
 
         .table-row {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
             padding: 1rem 1.5rem;
             border-bottom: 1px solid var(--border-light);
             transition: all 0.3s ease;
@@ -889,229 +841,412 @@
 
         /* Modal Styles */
         .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(3px);
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(3px);
+        }
 
-.modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
 
-.modal-content {
-    background: var(--surface-color);
-    border-radius: 20px;
-    padding: 2.5rem;
-    width: 90%;
-    max-width: 1200px;
-    max-height: 90vh;
-    overflow-y: auto;
-    margin: 1rem;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--border-color);
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
-}
+        .modal-content {
+            background: var(--surface-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 1rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
 
-.modal-overlay.active .modal-content {
-    transform: scale(1);
-}
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-light);
-}
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
 
-.modal-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
 
-.modal-close {
-    background: none;
-    border: none;
-    font-size: 1.75rem;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-}
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
 
-.modal-close:hover {
-    background: var(--background-color);
-    color: var(--text-primary);
-}
+        .modal-close:hover {
+            background: var(--background-color);
+            color: var(--text-primary);
+        }
 
-.modal-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
-}
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
 
-.modal-card {
-    background: var(--background-color);
-    border-radius: 12px;
-    padding: 1.5rem;
-    border: 1px solid var(--border-light);
-    transition: all 0.3s ease;
-}
+        .modal-card {
+            background: var(--background-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
 
-.modal-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
+        .modal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
 
-.modal-card-title {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
+        .modal-card-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-.modal-card-value {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
+        .modal-card-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
 
-.modal-card-description {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-}
+        .modal-card-description {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
 
-.detail-section {
-    margin-bottom: 2.5rem;
-    background: var(--background-color);
-    border-radius: 16px;
-    padding: 1.5rem;
-    border: 1px solid var(--border-light);
-}
+        .detail-section {
+            margin-bottom: 2.5rem;
+            background: var(--background-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
 
-.detail-section-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
+        .detail-section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
 
-.detail-section-title svg {
-    width: 20px;
-    height: 20px;
-    color: var(--primary-color);
-}
+        .detail-section-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary-color);
+        }
 
-.detail-list {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
-}
+        .detail-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
 
-.detail-list li {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    background: var(--surface-color);
-    border: 1px solid var(--border-light);
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-}
+        .detail-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-light);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
 
-.detail-list li:hover {
-    border-color: var(--primary-light);
-    box-shadow: var(--shadow);
-}
+        .detail-list li:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow);
+        }
 
-.detail-label {
-    color: var(--text-secondary);
-    font-weight: 500;
-}
+        .detail-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
 
-.detail-value {
-    color: var(--text-primary);
-    font-weight: 600;
-}
-        
+        .detail-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
 
         .export-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.625rem 1.25rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-.export-btn:hover {
-    background: var(--primary-dark);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
+        .export-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
 
-.export-btn svg {
-    width: 16px;
-    height: 16px;
-}
+        .export-btn svg {
+            width: 16px;
+            height: 16px;
+        }
 
-.export-success {
-    position: fixed;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--success-color);
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 10px;
-    font-weight: 600;
-    box-shadow: var(--shadow-lg);
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-}
+        .export-success {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
 
-.export-success.active {
-    opacity: 1;
-    visibility: visible;
-}
+        .export-success.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* System Info Page */
+        .system-info-page {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .system-info-page.active {
+            display: block;
+        }
+
+        .info-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--surface-color);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .info-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .info-section {
+            background: var(--surface-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .info-section-title svg {
+            width: 24px;
+            height: 24px;
+            color: var(--primary-color);
+        }
+
+        .info-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .info-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .info-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .info-list li::before {
+            content: '•';
+            color: var(--primary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .back-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cam-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .traffic-light-container {
+                justify-self: center;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .header-title {
+                display: none;
+            }
+
+            .history-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .period-selector {
+                justify-content: center;
+            }
+
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .chart-legend {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .user-info span {
+                display: none;
+            }
+
+            .date-range-picker {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                margin: 0.5rem;
+                padding: 1.5rem;
+            }
+
+            .modal-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
@@ -1126,6 +1261,13 @@
             <h1 class="header-title">Smart Pedestrian Crossing</h1>
         </div>
         <div class="header-right">
+            <button class="info-btn" onclick="showSystemInfo()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4"/>
+                    <path d="M12 8h.01"/>
+                </svg>
+            </button>
             <button class="theme-toggle" onclick="toggleTheme()">
                 <svg class="sun-icon" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="5"/>
@@ -1149,7 +1291,8 @@
         </div>
     </header>
 
-    <main class="main-content">
+    <!-- Dashboard Content -->
+    <main class="main-content" id="dashboardContent">
         <div class="current-time">
             <div class="time-display" id="currentTime">--:--:--</div>
             <div class="date-display" id="currentDate">-- -- ----</div>
@@ -1244,23 +1387,9 @@
                 <div class="stat-value" id="peakHour">17:30</div>
                 <div class="stat-description">Jam tersibuk hari ini</div>
             </div>
-
-            <!-- <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">Efisiensi Sistem</span>
-                    <div class="stat-icon purple">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="stat-value" id="efficiency">94%</div>
-                <div class="stat-description">Tingkat efisiensi deteksi</div>
-            </div> -->
         </div>
 
         <!-- History Section -->
-        
         <div class="history-section">
             <div class="history-header">
                 <h2 class="section-title">Analisis Historis</h2>
@@ -1317,29 +1446,6 @@
                 </div>
             </div>
 
-            <div class="history-grid">
-                <div class="history-card">
-                    <div class="history-card-title">Total Penyeberangan</div>
-                    <div class="history-card-value" id="historyTotalCrossings">1,247</div>
-                    <div class="history-card-change change-positive" id="historyTotalChange">+12% dari periode sebelumnya</div>
-                </div>
-                <div class="history-card">
-                    <div class="history-card-title">Rata-rata Harian</div>
-                    <div class="history-card-value" id="historyAvgDaily">178</div>
-                    <div class="history-card-change change-positive" id="historyAvgChange">+8% dari periode sebelumnya</div>
-                </div>
-                <div class="history-card">
-                    <div class="history-card-title">Waktu Tunggu Rata-rata</div>
-                    <div class="history-card-value" id="historyAvgWait">28s</div>
-                    <div class="history-card-change change-negative" id="historyWaitChange">-5% dari periode sebelumnya</div>
-                </div>
-                <div class="history-card">
-                    <div class="history-card-title">Efisiensi Sistem</div>
-                    <div class="history-card-value" id="historyEfficiency">96%</div>
-                    <div class="history-card-change change-positive" id="historyEfficiencyChange">+2% dari periode sebelumnya</div>
-                </div>
-            </div>
-
             <div class="history-table">
                 <div class="table-header">
                     <div class="table-title">Detail Harian</div>
@@ -1350,7 +1456,6 @@
                         <div class="table-cell"><strong>Total Crossing</strong></div>
                         <div class="table-cell"><strong>Peak Hour</strong></div>
                         <div class="table-cell"><strong>Avg Duration</strong></div>
-                        <!-- <div class="table-cell"><strong>Efisiensi</strong></div> -->
                     </div>
                     <div id="historyTableData">
                         <!-- Data will be populated by JavaScript -->
@@ -1360,8 +1465,108 @@
         </div>
     </main>
 
+    <!-- System Info Page -->
+    <div class="system-info-page" id="systemInfoPage">
+        <button class="back-btn" onclick="showDashboard()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5"/>
+                <path d="M12 19l-7-7 7-7"/>
+            </svg>
+            Kembali ke Dashboard
+        </button>
+
+        <div class="info-header">
+            <h1 class="info-title">Smart Pedestrian Crossing</h1>
+            <p class="info-subtitle">Deteksi dan Pemantauan Penyeberang Jalan Berbasis Kamera</p>
+        </div>
+
+        <div class="info-section">
+            <h2 class="info-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 6v6l4 2"/>
+                </svg>
+                Urgensi Proyek
+            </h2>
+            <div class="info-content">
+                <p>Proyek ini penting untuk meningkatkan keselamatan pejalan kaki dengan sistem penyeberangan otomatis berbasis deteksi kamera dan people counting. Sistem ini membantu mengatur lampu lalu lintas secara responsif, menyediakan data real-time melalui dashboard web, serta mendukung implementasi Smart City.</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="info-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+                Ruang Lingkup Proyek
+            </h2>
+            <div class="info-content">
+                <ul class="info-list">
+                    <li>Sistem hanya difokuskan pada area penyeberangan jalan (zebra cross) di satu titik lokasi</li>
+                    <li>Deteksi hanya dilakukan terhadap pejalan kaki (tidak termasuk kendaraan atau hewan)</li>
+                    <li>Menggunakan kamera pengawas (tanpa sensor tambahan) sebagai input utama</li>
+                    <li>Pengambilan keputusan pengaktifan lampu penyeberangan berdasarkan analisis jumlah orang yang menunggu di sisi jalan</li>
+                    <li>Sistem terkoneksi dengan website (dashboard) untuk menampilkan data real-time people counting dan status lampu</li>
+                    <li>Fokus sistem adalah mendukung keamanan pejalan kaki, bukan sistem lalu lintas penuh</li>
+                    <li>Tidak mencakup kontrol kendaraan (seperti traffic light umum atau smart vehicle detection)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="info-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                Output yang Diharapkan
+            </h2>
+            <div class="info-content">
+                <ul class="info-list">
+                    <li>Lampu penyeberangan otomatis menyala saat ada orang yang hendak menyeberang</li>
+                    <li>Jumlah pejalan kaki yang menyeberang tercatat otomatis</li>
+                    <li>Dashboard website yang menampilkan:
+                        <ul class="info-list" style="margin-left: 1rem;">
+                            <li>Grafik jumlah orang per hari/jam</li>
+                            <li>Status real-time lampu penyeberangan</li>
+                            <li>Tanggal & waktu penyeberangan</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="info-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20V10"/>
+                    <path d="M18 20V4"/>
+                    <path d="M6 20v-4"/>
+                </svg>
+                Bisnis Proses Sistem
+            </h2>
+            <div class="info-content">
+                <ol class="info-list">
+                    <li>Kamera 1 dan 2 melakukan pemantauan area zebra cross secara real-time</li>
+                    <li>Model deteksi objek (misalnya YOLO) memproses gambar video untuk mendeteksi keberadaan orang di area tunggu</li>
+                    <li>Jika orang terdeteksi secara konsisten selama 10 detik, sistem mengubah lampu penyeberangan menjadi hijau</li>
+                    <li>Saat pejalan kaki melewati garis counting, sistem menghitung jumlah pejalan kaki dan menyimpan ID serta waktu ke database</li>
+                    <li>Data jumlah pejalan kaki secara otomatis di-update ke tampilan website/dashboard</li>
+                    <li>Sistem terus memantau apakah masih ada orang yang terdeteksi di zebra cross</li>
+                    <li>Jika tidak ada lagi pejalan kaki yang terdeteksi, sistem mengubah lampu penyeberangan menjadi merah kembali</li>
+                    <li>Status lampu ini juga di-update ke dashboard web</li>
+                    <li>Semua data berjalan secara otomatis dan real-time, dapat dipantau oleh operator atau masyarakat melalui antarmuka web</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
     <!-- Detail Modal -->
-    
     <div class="export-success" id="exportSuccess">
         Data berhasil diexport!
     </div>
@@ -1391,21 +1596,10 @@
             <div class="detail-section">
                 <div class="detail-section-title">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                    Performa Sistem
-                </div>
-                <ul class="detail-list" id="systemPerformance">
-                    <!-- System performance will be populated by JavaScript -->
-                </ul>
-            </div>
-            <div class="detail-section">
-                <div class="detail-section-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M17 18a5 5 0 0 0-10 0"></path>
                         <line x1="12" y1="2" x2="12" y2="9"></line>
                         <line x1="4.22" y1="10.22" x2="5.64" y2="11.64"></line>
+                        <line x1="1" y1="18" x2="3" y2="18"></line  x2="5.64" y2="11.64"></line>
                         <line x1="1" y1="18" x2="3" y2="18"></line>
                         <line x1="21" y1="18" x2="23" y2="18"></line>
                         <line x1="18.36" y1="11.64" x2="19.78" y2="10.22"></line>
@@ -1442,6 +1636,16 @@
                 sunIcon.style.display = 'block';
                 moonIcon.style.display = 'none';
             }
+        }
+
+        function showSystemInfo() {
+            document.getElementById('dashboardContent').style.display = 'none';
+            document.getElementById('systemInfoPage').classList.add('active');
+        }
+
+        function showDashboard() {
+            document.getElementById('dashboardContent').style.display = 'block';
+            document.getElementById('systemInfoPage').classList.remove('active');
         }
 
         function logout() {
@@ -1569,7 +1773,6 @@
                 efficiency: `${Math.floor(Math.random() * 10) + 90}%`,
                 weather: ['Cerah', 'Berawan', 'Hujan Ringan'][Math.floor(Math.random() * 3)],
                 temperature: `${Math.floor(Math.random() * 10) + 25}°C`,
-                visibility: `${Math.floor(Math.random() * 5) + 8}/10`,
                 systemUptime: `${Math.floor(Math.random() * 5) + 95}%`,
                 detectionAccuracy: `${Math.floor(Math.random() * 8) + 92}%`,
                 responseTime: `${Math.floor(Math.random() * 500) + 100}ms`,
@@ -1630,72 +1833,9 @@
                 dateRangePicker.style.display = 'none';
             }
             
-            // Update history data and chart
-            updateHistoryData(period);
+            // Update chart
             generateChartData(period);
             updateChart();
-        }
-
-        function updateHistoryData(period) {
-            // Simulate different data based on period
-            let totalCrossings, avgDaily, avgWait, efficiency;
-            let totalChange, avgChange, waitChange, efficiencyChange;
-            
-            switch(period) {
-                case 'today':
-                    totalCrossings = '247';
-                    avgDaily = '247';
-                    avgWait = '32s';
-                    efficiency = '94%';
-                    totalChange = '+5% dari kemarin';
-                    avgChange = '+5% dari kemarin';
-                    waitChange = '-3% dari kemarin';
-                    efficiencyChange = '+1% dari kemarin';
-                    break;
-                case 'week':
-                    totalCrossings = '1,734';
-                    avgDaily = '248';
-                    avgWait = '29s';
-                    efficiency = '96%';
-                    totalChange = '+12% dari minggu lalu';
-                    avgChange = '+8% dari minggu lalu';
-                    waitChange = '-5% dari minggu lalu';
-                    efficiencyChange = '+2% dari minggu lalu';
-                    break;
-                case 'month':
-                    totalCrossings = '7,456';
-                    avgDaily = '241';
-                    avgWait = '31s';
-                    efficiency = '95%';
-                    totalChange = '+18% dari bulan lalu';
-                    avgChange = '+15% dari bulan lalu';
-                    waitChange = '-2% dari bulan lalu';
-                    efficiencyChange = '+3% dari bulan lalu';
-                    break;
-                default:
-                    totalCrossings = '1,247';
-                    avgDaily = '178';
-                    avgWait = '28s';
-                    efficiency = '96%';
-                    totalChange = '+12% dari periode sebelumnya';
-                    avgChange = '+8% dari periode sebelumnya';
-                    waitChange = '-5% dari periode sebelumnya';
-                    efficiencyChange = '+2% dari periode sebelumnya';
-            }
-            
-            // Update history cards
-            document.getElementById('historyTotalCrossings').textContent = totalCrossings;
-            document.getElementById('historyAvgDaily').textContent = avgDaily;
-            document.getElementById('historyAvgWait').textContent = avgWait;
-            document.getElementById('historyEfficiency').textContent = efficiency;
-            
-            document.getElementById('historyTotalChange').textContent = totalChange;
-            document.getElementById('historyAvgChange').textContent = avgChange;
-            document.getElementById('historyWaitChange').textContent = waitChange;
-            document.getElementById('historyEfficiencyChange').textContent = efficiencyChange;
-            
-            // Update table data
-            updateHistoryTable(period);
         }
 
         function updateHistoryTable(period) {
@@ -1717,7 +1857,6 @@
                 const crossings = Math.floor(Math.random() * 100) + 200;
                 const peakHour = Math.floor(Math.random() * 4) + 16 + ':' + (Math.floor(Math.random() * 6) * 10);
                 const duration = Math.floor(Math.random() * 20) + 25 + 's';
-                const eff = Math.floor(Math.random() * 10) + 90 + '%';
                 
                 const detailData = generateDetailData(dateStr, crossings, period);
                 
@@ -1731,7 +1870,6 @@
                         <div class="table-cell">${crossings}</div>
                         <div class="table-cell">${peakHour}</div>
                         <div class="table-cell">${duration}</div>
-                        <div class="table-cell">${eff}</div>
                     </div>
                 `;
             }
@@ -1744,7 +1882,6 @@
             const modalTitle = document.getElementById('modalTitle');
             const modalSummary = document.getElementById('modalSummary');
             const trafficAnalysis = document.getElementById('trafficAnalysis');
-            const systemPerformance = document.getElementById('systemPerformance');
             const environmentalConditions = document.getElementById('environmentalConditions');
             
             // Set modal title
@@ -1752,57 +1889,40 @@
             
             // Create summary cards
             modalSummary.innerHTML = `
-        <div class="modal-card">
-            <div class="modal-card-title">Total Penyeberangan</div>
-            <div class="modal-card-value">${data.value}</div>
-            <div class="modal-card-description">Jumlah total pejalan kaki yang menyeberang</div>
-        </div>
-        <div class="modal-card">
-            <div class="modal-card-title">Jam Sibuk</div>
-            <div class="modal-card-value">${data.details.peakHour}</div>
-            <div class="modal-card-description">Waktu dengan aktivitas tertinggi</div>
-        </div>
-        <div class="modal-card">
-            <div class="modal-card-title">Durasi Rata-rata</div>
-            <div class="modal-card-value">${data.details.avgDuration}</div>
-            <div class="modal-card-description">Waktu rata-rata penyeberangan</div>
-        </div>
-        <div class="modal-card">
-            <div class="modal-card-title">Efisiensi Sistem</div>
-            <div class="modal-card-value">${data.details.efficiency}</div>
-            <div class="modal-card-description">Tingkat efisiensi deteksi sistem</div>
-        </div>
-    `;
+                <div class="modal-card">
+                    <div class="modal-card-title">Total Penyeberangan</div>
+                    <div class="modal-card-value">${data.value}</div>
+                    <div class="modal-card-description">Jumlah total pejalan kaki yang menyeberang</div>
+                </div>
+                <div class="modal-card">
+                    <div class="modal-card-title">Jam Sibuk</div>
+                    <div class="modal-card-value">${data.details.peakHour}</div>
+                    <div class="modal-card-description">Waktu dengan aktivitas tertinggi</div>
+                </div>
+                <div class="modal-card">
+                    <div class="modal-card-title">Durasi Rata-rata</div>
+                    <div class="modal-card-value">${data.details.avgDuration}</div>
+                    <div class="modal-card-description">Waktu rata-rata penyeberangan</div>
+                </div>
+            `;
             
             // Traffic analysis details
             trafficAnalysis.innerHTML = `
-        <li><span class="detail-label">Pola Lalu Lintas</span><span class="detail-value">${data.details.trafficPattern}</span></li>
-        <li><span class="detail-label">Durasi Jam Sibuk</span><span class="detail-value">${data.details.peakTrafficDuration}</span></li>
-        <li><span class="detail-label">Waktu Tunggu Rata-rata</span><span class="detail-value">${data.details.avgWaitTime}</span></li>
-        <li><span class="detail-label">Insiden Keselamatan</span><span class="detail-value">${data.details.safetyIncidents} kejadian</span></li>
-        <li><span class="detail-label">Tingkat Kepadatan</span><span class="detail-value">${data.value > 200 ? 'Tinggi' : data.value > 100 ? 'Sedang' : 'Rendah'}</span></li>
-        <li><span class="detail-label">Frekuensi Penyeberangan</span><span class="detail-value">${Math.floor(data.value / 24)} per jam</span></li>
-    `;
+                <li><span class="detail-label">Pola Lalu Lintas</span><span class="detail-value">${data.details.trafficPattern}</span></li>
+                <li><span class="detail-label">Durasi Jam Sibuk</span><span class="detail-value">${data.details.peakTrafficDuration}</span></li>
+                <li><span class="detail-label">Waktu Tunggu Rata-rata</span><span class="detail-value">${data.details.avgWaitTime}</span></li>
+                <li><span class="detail-label">Insiden Keselamatan</span><span class="detail-value">${data.details.safetyIncidents} kejadian</span></li>
+                <li><span class="detail-label">Tingkat Kepadatan</span><span class="detail-value">${data.value > 200 ? 'Tinggi' : data.value > 100 ? 'Sedang' : 'Rendah'}</span></li>
+                <li><span class="detail-label">Frekuensi Penyeberangan</span><span class="detail-value">${Math.floor(data.value / 24)} per jam</span></li>
+            `;
             
-            // System performance details
-            systemPerformance.innerHTML = `
-        <li><span class="detail-label">Uptime Sistem</span><span class="detail-value">${data.details.systemUptime}</span></li>
-        <li><span class="detail-label">Akurasi Deteksi</span><span class="detail-value">${data.details.detectionAccuracy}</span></li>
-        <li><span class="detail-label">Response Time</span><span class="detail-value">${data.details.responseTime}</span></li>
-        <li><span class="detail-label">Status Maintenance</span><span class="detail-value">${data.details.maintenanceStatus}</span></li>
-        <li><span class="detail-label">Kualitas Sinyal</span><span class="detail-value">${Math.floor(Math.random() * 20) + 80}%</span></li>
-        <li><span class="detail-label">Error Rate</span><span class="detail-value">${(Math.random() * 2).toFixed(2)}%</span></li>
-    `;
-            
-            // Environmental conditions details
+            // Environmental conditions details (removed visibility and lighting conditions)
             environmentalConditions.innerHTML = `
-        <li><span class="detail-label">Cuaca</span><span class="detail-value">${data.details.weather}</span></li>
-        <li><span class="detail-label">Suhu</span><span class="detail-value">${data.details.temperature}</span></li>
-        <li><span class="detail-label">Visibilitas</span><span class="detail-value">${data.details.visibility}</span></li>
-        <li><span class="detail-label">Kelembaban</span><span class="detail-value">${Math.floor(Math.random() * 30) + 60}%</span></li>
-        <li><span class="detail-label">Kecepatan Angin</span><span class="detail-value">${Math.floor(Math.random() * 15) + 5} km/h</span></li>
-        <li><span class="detail-label">Kondisi Pencahayaan</span><span class="detail-value">${['Baik', 'Sedang', 'Kurang'][Math.floor(Math.random() * 3)]}</span></li>
-    `;
+                <li><span class="detail-label">Cuaca</span><span class="detail-value">${data.details.weather}</span></li>
+                <li><span class="detail-label">Suhu</span><span class="detail-value">${data.details.temperature}</span></li>
+                <li><span class="detail-label">Kelembaban</span><span class="detail-value">${Math.floor(Math.random() * 30) + 60}%</span></li>
+                <li><span class="detail-label">Kecepatan Angin</span><span class="detail-value">${Math.floor(Math.random() * 15) + 5} km/h</span></li>
+            `;
             
             // Show modal
             modal.classList.add('active');
@@ -1821,94 +1941,93 @@
         });
 
         function updateCustomPeriod() {
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
-    
-    if (startDate && endDate) {
-        generateCustomChartData(startDate, endDate);
-        updateChart();
-        updateHistoryData('custom');
-    }
-}
-
-function generateCustomChartData(startDate, endDate) {
-    chartData = [];
-    
-    // Convert string dates to Date objects
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    
-    // Calculate the difference in days
-    const diffTime = Math.abs(end - start);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    
-    // If more than 14 days, group by weeks
-    if (diffDays > 14) {
-        const weeks = Math.ceil(diffDays / 7);
-        for (let i = 0; i < weeks; i++) {
-            const weekStart = new Date(start);
-            weekStart.setDate(start.getDate() + (i * 7));
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
             
-            const weekEnd = new Date(weekStart);
-            weekEnd.setDate(weekStart.getDate() + 6);
-            
-            if (weekEnd > end) {
-                weekEnd.setTime(end.getTime());
+            if (startDate && endDate) {
+                generateCustomChartData(startDate, endDate);
+                updateChart();
             }
-            
-            const weekStartStr = weekStart.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
-            const weekEndStr = weekEnd.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
-            
-            const label = `${weekStartStr} - ${weekEndStr}`;
-            const value = Math.floor(Math.random() * 1000) + 500;
-            const isPeak = i === Math.floor(weeks / 2); // Just for demo
-            
-            chartData.push({
-                label: label,
-                value: value,
-                isPeak: isPeak,
-                details: generateDetailData(label, value, 'custom')
-            });
         }
-    } else {
-        // Show daily data
-        for (let i = 0; i < diffDays; i++) {
-            const currentDate = new Date(start);
-            currentDate.setDate(start.getDate() + i);
-            
-            const dateStr = currentDate.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
-            const value = Math.floor(Math.random() * 300) + 100;
-            const isPeak = i === Math.floor(diffDays / 2); // Just for demo
-            
-            chartData.push({
-                label: dateStr,
-                value: value,
-                isPeak: isPeak,
-                details: generateDetailData(dateStr, value, 'custom')
-            });
-        }
-    }
-}
 
-function exportData() {
-    // Show export success notification
-    const exportSuccess = document.getElementById('exportSuccess');
-    exportSuccess.classList.add('active');
-    
-    // Hide notification after 3 seconds
-    setTimeout(() => {
-        exportSuccess.classList.remove('active');
-    }, 3000);
-    
-    // In a real application, this would generate and download a CSV/PDF file
-    // For this demo, we'll just simulate the export
-    
-    console.log('Exporting data for period:', currentPeriod);
-    console.log('Chart data:', chartData);
-    
-    // Here you would typically use a library like jsPDF, html2canvas, or 
-    // create a CSV file and trigger a download
-}
+        function generateCustomChartData(startDate, endDate) {
+            chartData = [];
+            
+            // Convert string dates to Date objects
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            
+            // Calculate the difference in days
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            
+            // If more than 14 days, group by weeks
+            if (diffDays > 14) {
+                const weeks = Math.ceil(diffDays / 7);
+                for (let i = 0; i < weeks; i++) {
+                    const weekStart = new Date(start);
+                    weekStart.setDate(start.getDate() + (i * 7));
+                    
+                    const weekEnd = new Date(weekStart);
+                    weekEnd.setDate(weekStart.getDate() + 6);
+                    
+                    if (weekEnd > end) {
+                        weekEnd.setTime(end.getTime());
+                    }
+                    
+                    const weekStartStr = weekStart.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
+                    const weekEndStr = weekEnd.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
+                    
+                    const label = `${weekStartStr} - ${weekEndStr}`;
+                    const value = Math.floor(Math.random() * 1000) + 500;
+                    const isPeak = i === Math.floor(weeks / 2); // Just for demo
+                    
+                    chartData.push({
+                        label: label,
+                        value: value,
+                        isPeak: isPeak,
+                        details: generateDetailData(label, value, 'custom')
+                    });
+                }
+            } else {
+                // Show daily data
+                for (let i = 0; i < diffDays; i++) {
+                    const currentDate = new Date(start);
+                    currentDate.setDate(start.getDate() + i);
+                    
+                    const dateStr = currentDate.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
+                    const value = Math.floor(Math.random() * 300) + 100;
+                    const isPeak = i === Math.floor(diffDays / 2); // Just for demo
+                    
+                    chartData.push({
+                        label: dateStr,
+                        value: value,
+                        isPeak: isPeak,
+                        details: generateDetailData(dateStr, value, 'custom')
+                    });
+                }
+            }
+        }
+
+        function exportData() {
+            // Show export success notification
+            const exportSuccess = document.getElementById('exportSuccess');
+            exportSuccess.classList.add('active');
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                exportSuccess.classList.remove('active');
+            }, 3000);
+            
+            // In a real application, this would generate and download a CSV/PDF file
+            // For this demo, we'll just simulate the export
+            
+            console.log('Exporting data for period:', currentPeriod);
+            console.log('Chart data:', chartData);
+            
+            // Here you would typically use a library like jsPDF, html2canvas, or 
+            // create a CSV file and trigger a download
+        }
 
         // Load saved theme and initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -1926,10 +2045,12 @@ function exportData() {
             // Initialize traffic light with red
             updateTrafficLight('MERAH');
             
-            // Initialize history data and chart
-            updateHistoryData('today');
+            // Initialize chart
             generateChartData('today');
             updateChart();
+            
+            // Initialize table
+            updateHistoryTable('today');
             
             // Start time updates
             updateTime();
@@ -1939,16 +2060,12 @@ function exportData() {
             simulateData();
             setInterval(simulateData, 5000);
             
-            // Set default dates for custom period and add event listeners
-const today = new Date();
-const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-document.getElementById('startDate').value = weekAgo.toISOString().split('T')[0];
-document.getElementById('endDate').value = today.toISOString().split('T')[0];
-
-// Add event listeners for date inputs
-document.getElementById('startDate').addEventListener('change', updateCustomPeriod);
-document.getElementById('endDate').addEventListener('change', updateCustomPeriod);
+            // Set default dates for custom period
+            const today = new Date();
+            const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+            
+            document.getElementById('startDate').value = weekAgo.toISOString().split('T')[0];
+            document.getElementById('endDate').value = today.toISOString().split('T')[0];
         });
     </script>
 </body>
