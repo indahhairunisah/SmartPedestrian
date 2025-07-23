@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Pedestrian Crossing - Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/logo_utama.png') }}">
     <style>
         :root {
             --primary-color: #2563eb;
@@ -59,6 +60,67 @@
             color: var(--text-primary);
             transition: all 0.3s ease;
             line-height: 1.6;
+        }
+
+        /* Error Notification Styles */
+        .error-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            z-index: 1001;
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .error-notification.show {
+            display: flex;
+        }
+
+        .error-notification-content {
+            flex: 1;
+        }
+
+        .error-notification-close {
+            background: none;
+            border: none;
+            color: #dc2626;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .error-notification-close:hover {
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         .header {
@@ -604,7 +666,7 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        /* Traffic Trend Chart */
+        /* Line Chart Styles */
         .trend-chart-section {
             background: var(--background-color);
             border-radius: 16px;
@@ -659,113 +721,68 @@
             border: 1px solid var(--border-light);
         }
 
-        .chart-grid {
-            position: absolute;
-            top: 1rem;
-            left: 3rem;
-            right: 1rem;
-            bottom: 3rem;
-            display: grid;
-            grid-template-rows: repeat(5, 1fr);
+        .chart-svg {
+            width: 100%;
+            height: 100%;
         }
 
-        .grid-line {
-            border-bottom: 1px solid var(--border-light);
-            position: relative;
+        .chart-grid-line {
+            stroke: var(--border-light);
+            stroke-width: 1;
         }
 
-        .grid-line:last-child {
-            border-bottom: none;
+        .chart-axis-label {
+            fill: var(--text-muted);
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
         }
 
-        .y-axis-label {
-            position: absolute;
-            left: -2.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.75rem;
-            color: var(--text-muted);
+        .chart-line {
+            fill: none;
+            stroke: var(--primary-color);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
-        .chart-bars {
-            position: absolute;
-            bottom: 3rem;
-            left: 3rem;
-            right: 1rem;
-            height: calc(100% - 4rem);
-            display: flex;
-            align-items: end;
-            gap: 0.5rem;
+        .chart-line.peak {
+            stroke: var(--warning-color);
         }
 
-        .chart-bar {
-            flex: 1;
-            background: linear-gradient(to top, var(--primary-color), var(--primary-light));
-            border-radius: 4px 4px 0 0;
-            position: relative;
+        .chart-point {
+            fill: var(--primary-color);
+            stroke: var(--background-color);
+            stroke-width: 2;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-height: 10px;
         }
 
-        .chart-bar:hover {
-            background: linear-gradient(to top, var(--primary-dark), var(--primary-color));
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+        .chart-point.peak {
+            fill: var(--warning-color);
         }
 
-        .chart-bar.peak {
-            background: linear-gradient(to top, var(--warning-color), #fbbf24);
+        .chart-point:hover {
+            r: 6;
+            stroke-width: 3;
         }
 
-        .chart-bar.peak:hover {
-            background: linear-gradient(to top, #d97706, var(--warning-color));
-        }
-
-        .bar-tooltip {
+        .chart-tooltip {
             position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
             background: var(--text-primary);
             color: var(--background-color);
-            padding: 0.5rem;
+            padding: 0.5rem 0.75rem;
             border-radius: 6px;
             font-size: 0.75rem;
+            font-weight: 600;
             white-space: nowrap;
-            opacity: 0;
             pointer-events: none;
+            opacity: 0;
             transition: opacity 0.3s ease;
             z-index: 10;
         }
 
-        .bar-tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 4px solid transparent;
-            border-top-color: var(--text-primary);
-        }
-
-        .chart-bar:hover .bar-tooltip {
+        .chart-tooltip.show {
             opacity: 1;
-        }
-
-        .x-axis {
-            position: absolute;
-            bottom: 1rem;
-            left: 3rem;
-            right: 1rem;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .x-axis-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-align: center;
         }
 
         .history-table {
@@ -900,7 +917,7 @@
 
         .modal-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
             margin-bottom: 2.5rem;
         }
@@ -1207,6 +1224,10 @@
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+
+            .modal-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 640px) {
@@ -1225,16 +1246,33 @@
             }
 
             .modal-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
+            }
+
+            .error-notification {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Error Notification -->
+    <div class="error-notification" id="errorNotification">
+        <div class="error-notification-content" id="errorNotificationContent">
+            <!-- Error message will be inserted here -->
+        </div>
+        <button class="error-notification-close" onclick="closeErrorNotification()" aria-label="Close notification">
+            ×
+        </button>
+    </div>
+
     <header class="header">
         <div class="header-left">
             <div class="logo-small">
-                <img src="{{ url_for('static', filename='assets/logo_utama.png') }}" alt="Smart Pedestrian Crossing Logo">
+                <img src="{{ url_for('static', filename='assets/logo_utama_fix.png') }}" alt="Smart Pedestrian Crossing Logo">
             </div>
             <h1 class="header-title">Smart Pedestrian Crossing</h1>
         </div>
@@ -1394,7 +1432,7 @@
                 </button>
             </div>
 
-            <!-- Traffic Trend Chart -->
+            <!-- Traffic Trend Line Chart -->
             <div class="trend-chart-section">
                 <div class="chart-header">
                     <div class="chart-title">Tren Arus Pejalan Kaki</div>
@@ -1410,19 +1448,10 @@
                     </div>
                 </div>
                 <div class="chart-container">
-                    <div class="chart-grid">
-                        <div class="grid-line"><div class="y-axis-label">400</div></div>
-                        <div class="grid-line"><div class="y-axis-label">300</div></div>
-                        <div class="grid-line"><div class="y-axis-label">200</div></div>
-                        <div class="grid-line"><div class="y-axis-label">100</div></div>
-                        <div class="grid-line"><div class="y-axis-label">0</div></div>
-                    </div>
-                    <div class="chart-bars" id="chartBars">
-                        <!-- Chart bars will be generated by JavaScript -->
-                    </div>
-                    <div class="x-axis" id="chartXAxis">
-                        <!-- X-axis labels will be generated by JavaScript -->
-                    </div>
+                    <svg class="chart-svg" id="chartSvg">
+                        <!-- Chart will be generated by JavaScript -->
+                    </svg>
+                    <div class="chart-tooltip" id="chartTooltip"></div>
                 </div>
             </div>
 
@@ -1597,6 +1626,43 @@
         let currentPeriod = 'today';
         let chartData = [];
 
+        // Error notification functions
+        function showErrorNotification(message) {
+            const notification = document.getElementById('errorNotification');
+            const content = document.getElementById('errorNotificationContent');
+            content.textContent = message;
+            notification.classList.add('show');
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                closeErrorNotification();
+            }, 5000);
+        }
+
+        function closeErrorNotification() {
+            const notification = document.getElementById('errorNotification');
+            notification.classList.remove('show');
+        }
+
+        // Check for error messages from URL parameters or session storage
+        function checkForErrors() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorParam = urlParams.get('error');
+            
+            if (errorParam) {
+                showErrorNotification(decodeURIComponent(errorParam));
+                // Clean URL without refreshing
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+            
+            // Check session storage for error messages
+            const sessionError = sessionStorage.getItem('loginError');
+            if (sessionError) {
+                showErrorNotification(sessionError);
+                sessionStorage.removeItem('loginError');
+            }
+        }
+
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
@@ -1629,7 +1695,7 @@
 
         function logout() {
             if (confirm('Apakah Anda yakin ingin logout?')) {
-                window.location.href = 'login.html';
+                window.location.href = 'login';
             }
         }
 
@@ -1743,49 +1809,118 @@
                 totalCrossings: value,
                 peakHour: `${Math.floor(Math.random() * 4) + 16}:${(Math.floor(Math.random() * 6) * 10).toString().padStart(2, '0')}`,
                 avgDuration: `${Math.floor(Math.random() * 20) + 25}s`,
-                efficiency: `${Math.floor(Math.random() * 10) + 90}%`,
                 weather: ['Cerah', 'Berawan', 'Hujan Ringan'][Math.floor(Math.random() * 3)],
                 temperature: `${Math.floor(Math.random() * 10) + 25}°C`,
                 systemUptime: `${Math.floor(Math.random() * 5) + 95}%`,
                 detectionAccuracy: `${Math.floor(Math.random() * 8) + 92}%`,
                 responseTime: `${Math.floor(Math.random() * 500) + 100}ms`,
                 maintenanceStatus: ['Normal', 'Perlu Perhatian', 'Optimal'][Math.floor(Math.random() * 3)],
-                trafficPattern: ['Normal', 'Tinggi', 'Rendah'][Math.floor(Math.random() * 3)],
-                safetyIncidents: Math.floor(Math.random() * 3),
                 avgWaitTime: `${Math.floor(Math.random() * 30) + 20}s`,
                 peakTrafficDuration: `${Math.floor(Math.random() * 60) + 30} menit`
             };
         }
 
+        // Line Chart Implementation
         function updateChart() {
-            const chartBars = document.getElementById('chartBars');
-            const chartXAxis = document.getElementById('chartXAxis');
+            const chartSvg = document.getElementById('chartSvg');
+            const tooltip = document.getElementById('chartTooltip');
             
             // Clear existing content
-            chartBars.innerHTML = '';
-            chartXAxis.innerHTML = '';
+            chartSvg.innerHTML = '';
+            
+            if (chartData.length === 0) return;
+            
+            const margin = { top: 20, right: 30, bottom: 40, left: 50 };
+            const width = chartSvg.clientWidth - margin.left - margin.right;
+            const height = chartSvg.clientHeight - margin.top - margin.bottom;
             
             const maxValue = Math.max(...chartData.map(d => d.value));
+            const minValue = Math.min(...chartData.map(d => d.value));
+            const valueRange = maxValue - minValue;
             
-            // Create bars
+            // Create scales
+            const xScale = (index) => margin.left + (index * (width / (chartData.length - 1)));
+            const yScale = (value) => margin.top + height - ((value - minValue) / valueRange * height);
+            
+            // Draw grid lines
+            for (let i = 0; i <= 5; i++) {
+                const y = margin.top + (i * height / 5);
+                const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                gridLine.setAttribute('x1', margin.left);
+                gridLine.setAttribute('y1', y);
+                gridLine.setAttribute('x2', margin.left + width);
+                gridLine.setAttribute('y2', y);
+                gridLine.setAttribute('class', 'chart-grid-line');
+                chartSvg.appendChild(gridLine);
+                
+                // Y-axis labels
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                const labelValue = Math.round(maxValue - (i * (maxValue - minValue) / 5));
+                label.setAttribute('x', margin.left - 10);
+                label.setAttribute('y', y + 4);
+                label.setAttribute('text-anchor', 'end');
+                label.setAttribute('class', 'chart-axis-label');
+                label.textContent = labelValue;
+                chartSvg.appendChild(label);
+            }
+            
+            // Create line path
+            let pathData = '';
             chartData.forEach((data, index) => {
-                const bar = document.createElement('div');
-                bar.className = `chart-bar ${data.isPeak ? 'peak' : ''}`;
-                bar.style.height = `${(data.value / maxValue) * 100}%`;
-                bar.onclick = () => showDetailModal(data);
+                const x = xScale(index);
+                const y = yScale(data.value);
                 
-                const tooltip = document.createElement('div');
-                tooltip.className = 'bar-tooltip';
-                tooltip.textContent = `${data.label}: ${data.value} pejalan kaki`;
-                bar.appendChild(tooltip);
+                if (index === 0) {
+                    pathData += `M ${x} ${y}`;
+                } else {
+                    pathData += ` L ${x} ${y}`;
+                }
+            });
+            
+            // Draw line
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            line.setAttribute('d', pathData);
+            line.setAttribute('class', 'chart-line');
+            chartSvg.appendChild(line);
+            
+            // Draw points and labels
+            chartData.forEach((data, index) => {
+                const x = xScale(index);
+                const y = yScale(data.value);
                 
-                chartBars.appendChild(bar);
+                // Draw point
+                const point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                point.setAttribute('cx', x);
+                point.setAttribute('cy', y);
+                point.setAttribute('r', 4);
+                point.setAttribute('class', `chart-point ${data.isPeak ? 'peak' : ''}`);
                 
-                // Create x-axis label
-                const label = document.createElement('div');
-                label.className = 'x-axis-label';
+                // Add hover events
+                point.addEventListener('mouseenter', (e) => {
+                    tooltip.textContent = `${data.label}: ${data.value} pejalan kaki`;
+                    tooltip.style.left = (e.pageX - tooltip.offsetWidth / 2) + 'px';
+                    tooltip.style.top = (e.pageY - tooltip.offsetHeight - 10) + 'px';
+                    tooltip.classList.add('show');
+                });
+                
+                point.addEventListener('mouseleave', () => {
+                    tooltip.classList.remove('show');
+                });
+                
+                point.addEventListener('click', () => {
+                    showDetailModal(data);
+                });
+                
+                chartSvg.appendChild(point);
+                
+                // X-axis labels
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', x);
+                label.setAttribute('y', margin.top + height + 20);
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('class', 'chart-axis-label');
                 label.textContent = data.label;
-                chartXAxis.appendChild(label);
+                chartSvg.appendChild(label);
             });
         }
 
@@ -1979,7 +2114,7 @@
             // Set modal title
             modalTitle.textContent = `Detail Analisis - ${data.label}`;
             
-            // Create summary cards
+            // Create summary cards (removed efficiency system)
             modalSummary.innerHTML = `
                 <div class="modal-card">
                     <div class="modal-card-title">Total Penyeberangan</div>
@@ -1996,24 +2131,17 @@
                     <div class="modal-card-value">${data.details.avgDuration}</div>
                     <div class="modal-card-description">Waktu rata-rata penyeberangan</div>
                 </div>
-                <div class="modal-card">
-                    <div class="modal-card-title">Efisiensi Sistem</div>
-                    <div class="modal-card-value">${data.details.efficiency}</div>
-                    <div class="modal-card-description">Tingkat efisiensi deteksi sistem</div>
-                </div>
             `;
             
-            // Traffic analysis details
+            // Traffic analysis details (removed pola lalu lintas and insiden keselamatan)
             trafficAnalysis.innerHTML = `
-                <li><span class="detail-label">Pola Lalu Lintas</span><span class="detail-value">${data.details.trafficPattern}</span></li>
                 <li><span class="detail-label">Durasi Jam Sibuk</span><span class="detail-value">${data.details.peakTrafficDuration}</span></li>
                 <li><span class="detail-label">Waktu Tunggu Rata-rata</span><span class="detail-value">${data.details.avgWaitTime}</span></li>
-                <li><span class="detail-label">Insiden Keselamatan</span><span class="detail-value">${data.details.safetyIncidents} kejadian</span></li>
                 <li><span class="detail-label">Tingkat Kepadatan</span><span class="detail-value">${data.value > 200 ? 'Tinggi' : data.value > 100 ? 'Sedang' : 'Rendah'}</span></li>
                 <li><span class="detail-label">Frekuensi Penyeberangan</span><span class="detail-value">${Math.floor(data.value / 24)} per jam</span></li>
             `;
             
-            // Environmental conditions details (removed visibility and lighting conditions)
+            // Environmental conditions details
             environmentalConditions.innerHTML = `
                 <li><span class="detail-label">Cuaca</span><span class="detail-value">${data.details.weather}</span></li>
                 <li><span class="detail-label">Suhu</span><span class="detail-value">${data.details.temperature}</span></li>
@@ -2140,6 +2268,9 @@
                 moonIcon.style.display = 'block';
             }
             
+            // Check for error messages
+            checkForErrors();
+            
             // Initialize traffic light with red
             updateTrafficLight('MERAH');
             
@@ -2163,6 +2294,11 @@
             
             document.getElementById('startDate').value = weekAgo.toISOString().split('T')[0];
             document.getElementById('endDate').value = today.toISOString().split('T')[0];
+
+            // Handle chart resize
+            window.addEventListener('resize', () => {
+                setTimeout(updateChart, 100);
+            });
         });
     </script>
 </body>
