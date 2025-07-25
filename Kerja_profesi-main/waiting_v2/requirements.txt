@@ -1,0 +1,5 @@
+opencv-python
+numpy
+shapely
+ultralytics
+paho-mqtt
