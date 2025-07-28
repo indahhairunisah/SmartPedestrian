@@ -2069,7 +2069,7 @@
                         <div class="table-cell"><strong>Jam</strong></div>
                         <div class="table-cell"><strong>Total Crossing</strong></div>
                         <div class="table-cell"><strong>Peak Period</strong></div>
-                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                        <div class="table-cell"><strong>Total Duration</strong></div>
                     `;
                     break;
                 case 'week':
@@ -2078,7 +2078,7 @@
                         <div class="table-cell"><strong>Hari</strong></div>
                         <div class="table-cell"><strong>Total Crossing</strong></div>
                         <div class="table-cell"><strong>Peak Hour</strong></div>
-                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                        <div class="table-cell"><strong>Total Duration</strong></div>
                     `;
                     break;
                 case 'month':
@@ -2087,7 +2087,7 @@
                         <div class="table-cell"><strong>Tanggal</strong></div>
                         <div class="table-cell"><strong>Total Crossing</strong></div>
                         <div class="table-cell"><strong>Peak Hour</strong></div>
-                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                        <div class="table-cell"><strong>Total Duration</strong></div>
                     `;
                     break;
                 case 'custom':
@@ -2096,7 +2096,7 @@
                         <div class="table-cell"><strong>Periode</strong></div>
                         <div class="table-cell"><strong>Total Crossing</strong></div>
                         <div class="table-cell"><strong>Peak Hour</strong></div>
-                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                        <div class="table-cell"><strong>Total Duration</strong></div>
                     `;
                     break;
             }
@@ -2195,7 +2195,7 @@
                     // Show data based on custom period (use chart data)
                     chartData.forEach((data) => {
                         const peakHour = data.details.peakHour;
-                        const duration = data.details.avgDuration;
+                        const duration = data.details.TotalDuration;
                         
                         rows += `
                             <div class="table-row" onclick="showDetailModal(${JSON.stringify(data).replace(/"/g, '&quot;')})">
@@ -2235,7 +2235,7 @@
                 </div>
                 <div class="modal-card">
                     <div class="modal-card-title">Durasi Rata-rata</div>
-                    <div class="modal-card-value">${data.details.avgDuration}</div>
+                    <div class="modal-card-value">${data.details.TotalDuration}</div>
                     <div class="modal-card-description">Waktu rata-rata penyeberangan</div>
                 </div>
             `;
