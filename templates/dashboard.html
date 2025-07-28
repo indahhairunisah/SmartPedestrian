@@ -291,7 +291,7 @@
             background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
             border-radius: 24px;
             padding: 1.25rem 1rem;
-            box-shadow: 
+            box-shadow:
                 inset 0 2px 4px rgba(255, 255, 255, 0.1),
                 var(--shadow-lg);
             border: 2px solid #333;
@@ -356,7 +356,7 @@
 
         .red-light.active {
             background: radial-gradient(circle at 30% 30%, #ff4757, #ff0000);
-            box-shadow: 
+            box-shadow:
                 inset 0 2px 4px rgba(0, 0, 0, 0.3),
                 0 0 25px rgba(255, 0, 0, 0.7),
                 0 0 50px rgba(255, 0, 0, 0.5);
@@ -370,7 +370,7 @@
 
         .green-light.active {
             background: radial-gradient(circle at 30% 30%, #26de81, #20bf6b);
-            box-shadow: 
+            box-shadow:
                 inset 0 2px 4px rgba(0, 0, 0, 0.3),
                 0 0 25px rgba(0, 255, 0, 0.7),
                 0 0 50px rgba(0, 255, 0, 0.5);
@@ -435,9 +435,10 @@
         .status-red { color: var(--danger-color); }
         .status-yellow { color: var(--warning-color); }
 
+        /* Updated Stats Grid - Now 3 columns */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -491,6 +492,8 @@
 
         .stat-icon.blue { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)); }
         .stat-icon.green { background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(4, 120, 87, 0.1)); }
+        .stat-icon.orange { background: linear-gradient(135deg, rgba(251, 146, 60, 0.1), rgba(249, 115, 22, 0.1)); }
+
         .env-icon.weather { background: linear-gradient(135deg, rgba(251, 146, 60, 0.1), rgba(249, 115, 22, 0.1)); }
         .env-icon.temp { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1)); }
         .env-icon.humidity { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)); }
@@ -503,6 +506,8 @@
 
         .stat-icon.blue svg { fill: var(--primary-color); }
         .stat-icon.green svg { fill: var(--success-color); }
+        .stat-icon.orange svg { fill: #f97316; }
+
         .env-icon.weather svg { fill: #f97316; }
         .env-icon.temp svg { fill: #ef4444; }
         .env-icon.humidity svg { fill: var(--primary-color); }
@@ -1233,6 +1238,7 @@
                 gap: 0.5rem;
             }
 
+            /* Updated responsive for 3 cards */
             .stats-grid {
                 grid-template-columns: 1fr;
             }
@@ -1242,6 +1248,13 @@
             }
 
             .modal-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* For tablets, show 2 cards per row */
+            .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
@@ -1266,6 +1279,11 @@
             }
 
             .environmental-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* For mobile, show 1 card per row */
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -1351,7 +1369,7 @@
                     <span class="status-value" id="peopleCount">3 orang</span>
                 </div>
                 <div class="status-item">
-                    <span class="status-label">Waktu Tunggu</span>
+                    <span class="status-label">Waktu Penyebarangan</span>
                     <span class="status-value status-yellow" id="waitTime">45 detik</span>
                 </div>
                 <!-- <div class="status-item">
@@ -1361,7 +1379,7 @@
             </div>
         </div>
 
-        <!-- Statistics Grid (2 cards only) -->
+        <!-- Updated Statistics Grid (3 cards) -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-header">
@@ -1389,6 +1407,20 @@
                 </div>
                 <div class="stat-value" id="avgDuration">32s</div>
                 <div class="stat-description">Waktu rata-rata penyeberangan</div>
+            </div>
+
+            <!-- New Peak Hours Card -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Jam Sibuk</span>
+                    <div class="stat-icon orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="peakHour">17:30</div>
+                <div class="stat-description">Jam dengan penyeberangan terbanyak</div>
             </div>
         </div>
 
@@ -1491,10 +1523,10 @@
                             <div class="legend-color pedestrians"></div>
                             <span>Jumlah Pejalan Kaki</span>
                         </div>
-                        <!-- <div class="legend-item">
+                        <div class="legend-item">
                             <div class="legend-color peak"></div>
                             <span>Jam Sibuk</span>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
                 <div class="chart-container">
@@ -1528,7 +1560,7 @@
                     <div class="table-row" id="tableHeader">
                         <div class="table-cell"><strong>Tanggal</strong></div>
                         <div class="table-cell"><strong>Total Crossing</strong></div>
-                        <!-- <div class="table-cell"><strong>Peak Hour</strong></div> -->
+                        <div class="table-cell"><strong>Peak Hour</strong></div>
                         <div class="table-cell"><strong>Avg Duration</strong></div>
                     </div>
                     <div id="historyTableData">
@@ -1751,6 +1783,38 @@
             }
         }
 
+        // Function to get peak hour from today's data
+        function getTodaysPeakHour() {
+            // In a real application, this would query the database for today's crossing data
+            // and find the hour with the most crossings
+            
+            // Simulated hourly data for today
+            const hourlyData = [
+                { hour: '06:00', crossings: 15 },
+                { hour: '07:00', crossings: 45 },
+                { hour: '08:00', crossings: 78 },
+                { hour: '09:00', crossings: 32 },
+                { hour: '10:00', crossings: 28 },
+                { hour: '11:00', crossings: 35 },
+                { hour: '12:00', crossings: 52 },
+                { hour: '13:00', crossings: 41 },
+                { hour: '14:00', crossings: 38 },
+                { hour: '15:00', crossings: 55 },
+                { hour: '16:00', crossings: 67 },
+                { hour: '17:00', crossings: 89 }, // Peak hour
+                { hour: '18:00', crossings: 72 },
+                { hour: '19:00', crossings: 43 },
+                { hour: '20:00', crossings: 25 }
+            ];
+            
+            // Find the hour with maximum crossings
+            const peakHourData = hourlyData.reduce((max, current) => 
+                current.crossings > max.crossings ? current : max
+            );
+            
+            return peakHourData.hour;
+        }
+
         // Fetch real-time weather data
         async function updateWeatherData() {
             try {
@@ -1799,6 +1863,10 @@
             
             const avgDuration = Math.floor(Math.random() * 20) + 25;
             document.getElementById('avgDuration').textContent = avgDuration + 's';
+            
+            // Update peak hour (in real app, this would come from database)
+            const peakHour = getTodaysPeakHour();
+            document.getElementById('peakHour').textContent = peakHour;
         }
 
         function generateChartData(period) {
@@ -1991,7 +2059,7 @@
                     tableHeader.innerHTML = `
                         <div class="table-cell"><strong>Hari</strong></div>
                         <div class="table-cell"><strong>Total Crossing</strong></div>
-                        
+                        <div class="table-cell"><strong>Peak Hour</strong></div>
                         <div class="table-cell"><strong>Avg Duration</strong></div>
                     `;
                     break;
@@ -2000,7 +2068,7 @@
                     tableHeader.innerHTML = `
                         <div class="table-cell"><strong>Tanggal</strong></div>
                         <div class="table-cell"><strong>Total Crossing</strong></div>
-                        
+                        <div class="table-cell"><strong>Peak Hour</strong></div>
                         <div class="table-cell"><strong>Avg Duration</strong></div>
                     `;
                     break;
@@ -2009,7 +2077,7 @@
                     tableHeader.innerHTML = `
                         <div class="table-cell"><strong>Periode</strong></div>
                         <div class="table-cell"><strong>Total Crossing</strong></div>
-                        
+                        <div class="table-cell"><strong>Peak Hour</strong></div>
                         <div class="table-cell"><strong>Avg Duration</strong></div>
                     `;
                     break;
@@ -2076,11 +2144,11 @@
                     for (let i = 0; i < 30; i++) {
                         const date = new Date();
                         date.setDate(date.getDate() - i);
-                        const dateStr = date.toLocaleDateString('id-ID', { 
-                            day: '2-digit', 
-                            month: '2-digit', 
-                            year: 'numeric' 
-                        });
+                        const dateStr = date.toLocaleDateString('id-ID', {
+                             day: '2-digit',
+                             month: '2-digit',
+                             year: 'numeric'
+                         });
                         
                         const crossings = Math.floor(Math.random() * 300) + 100;
                         const peakHour = Math.floor(Math.random() * 4) + 16 + ':' + (Math.floor(Math.random() * 6) * 10);
@@ -2315,5 +2383,16 @@
             });
         });
     </script>
+    <footer style="background: var(--surface-color); border-top: 1px solid var(--border-light); padding: 1rem 2rem; color: var(--text-muted); margin-top: 2rem;">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+        <img src="{{ url_for('static', filename='assets/logo_utama_fix.png') }}" alt="Logo" style="width: 40px; height: 40px; border-radius: 8px;">
+        <div style="text-align: left;">
+          <div><small>&copy; 2025 Smart Pedestrian Crossing. Semua Hak Dilindungi.</small></div>
+          <div><small>Dikembangkan oleh Tim Informatika Universitas Pembangunan Jaya X PT. MarkTel</small></div>
+        </div>
+      </div>
+    </footer>
+
+
 </body>
 </html>

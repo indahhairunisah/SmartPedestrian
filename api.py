@@ -9,6 +9,7 @@ from shapely.geometry import Point, Polygon
 from ultralytics import YOLO
 from datetime import datetime
 import requests
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'rahasia123'
@@ -233,6 +234,8 @@ def generate_frames():
 
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
