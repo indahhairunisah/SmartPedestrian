@@ -234,8 +234,6 @@ def generate_frames():
 
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
-
-
-
+        
 if __name__ == '__main__':
     app.run(debug=True)
