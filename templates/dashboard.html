@@ -83,9 +83,9 @@
         }
 
         .logo-small {
-            width: 40px;
+            width: 60px;
             height: 40px;
-            border-radius: 12px;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -241,7 +241,8 @@
         .cam-container {
             background: #000;
             border-radius: 16px;
-            aspect-ratio: 16/9;
+            /* aspect-ratio: 16/9; */
+            width: 1280;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -365,7 +366,7 @@
         }
 
         .green-light {
-            background: radial-gradient(circle at 30% 30%, #5f27cd, #00d2d3);
+            background: radial-gradient(circle at 30% 30%, #26de81, #20bf6b);
         }
 
         .green-light.active {
@@ -1384,11 +1385,11 @@
                 </div>
                 <div class="status-item">
                     <span class="status-label">Jumlah Penyebrang</span>
-                    <span class="status-value" id="peopleCount">3 orang</span>
+                    <p><span class="status-value" id="peopleCount"></span></p>
                 </div>
                 <div class="status-item">
                     <span class="status-label">Waktu Penyebarangan</span>
-                    <span class="status-value status-yellow" id="waitTime">45 detik</span>
+                    <span class="status-value status-yellow" id="waitTime"></span>
                 </div>
                 <!-- <div class="status-item">
                     <span class="status-label">Status Sistem</span>
@@ -1461,7 +1462,7 @@
                         </svg>
                     </div>
                 </div>
-                <div class="env-value" id="weatherCondition">{{ weather_desc }}</div>
+                <div class="env-value" id="weatherCondition">{{ weather.weather_desc }}</div>
                 <div class="env-description">Kondisi cuaca saat ini</div>
             </div>
 
@@ -1474,7 +1475,7 @@
                         </svg>
                     </div>
                 </div>
-                <div class="env-value" id="temperature">{{ temperature }}°C</div>
+                <div class="env-value" id="temperature">{{ weather.temperature }}°C</div>
                 <div class="env-description">Suhu udara real-time</div>
             </div>
 
@@ -1487,7 +1488,7 @@
                         </svg>
                     </div>
                 </div>
-                <div class="env-value" id="humidity">{{ humidity }}%</div>
+                <div class="env-value" id="humidity">{{ weather.humidity }}%</div>
                 <div class="env-description">Kelembaban udara saat ini</div>
             </div>
 
@@ -1502,7 +1503,7 @@
                         </svg>
                     </div>
                 </div>
-                <div class="env-value" id="windSpeed">{{ windspeed }} km/h</div>
+                <div class="env-value" id="windSpeed">{{ weather.windspeed }} km/h</div>
                 <div class="env-description">Kecepatan angin real-time</div>
             </div>
         </div>
@@ -1725,10 +1726,10 @@
         let currentPeriod = 'today';
         let chartData = [];
         let weatherData = {
-            weather_desc: '{{ weather_desc }}',
-            temperature: '{{ temperature }}',
-            humidity: '{{ humidity }}',
-            windspeed: '{{ windspeed }}'
+            weather_desc: '{{ weather.weather_desc }}',
+            temperature: '{{  weather.temperature }}',
+            humidity: '{{  weather.humidity }}',
+            windspeed: '{{  weather.windspeed }}'
         };
 
         function toggleTheme() {
@@ -1788,12 +1789,12 @@
             
             // Activate the current light
             switch(lightStatus) {
-                case 'MERAH':
+                case 'STOP':
                     document.getElementById('redLight').classList.add('active');
                     document.getElementById('trafficStatus').textContent = 'MERAH';
                     document.getElementById('trafficStatus').style.color = 'var(--danger-color)';
                     break;
-                case 'HIJAU':
+                case 'WALK':
                     document.getElementById('greenLight').classList.add('active');
                     document.getElementById('trafficStatus').textContent = 'HIJAU';
                     document.getElementById('trafficStatus').style.color = 'var(--success-color)';
@@ -1836,43 +1837,48 @@
         // Fetch real-time weather data
         async function updateWeatherData() {
             try {
-                const response = await fetch('/api/weather');
-                if (response.ok) {
-                    const data = await response.json();
-                    weatherData = data;
-                    
-                    // Update environmental cards
-                    document.getElementById('weatherCondition').textContent = data.weather_desc;
-                    document.getElementById('temperature').textContent = data.temperature + '°C';
-                    document.getElementById('humidity').textContent = data.humidity + '%';
-                    document.getElementById('windSpeed').textContent = data.windspeed + ' km/h';
-                }
+            const response = await fetch('/api/weather');
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('weatherCondition').textContent = data.weather.weather_desc;
+                document.getElementById('temperature').textContent = data.weather.temperature + '°C';
+                document.getElementById('humidity').textContent = data.weather.humidity + '%';
+                document.getElementById('windSpeed').textContent = data.weather.windspeed + ' km/h';
+            }
             } catch (error) {
-                console.error('Error fetching weather data:', error);
+            console.error('❌ Gagal ambil data cuaca:', error);
             }
         }
 
+        // Panggil saat halaman selesai dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            updateWeatherData();
+            setInterval(updateWeatherData, 60000); // auto-refresh tiap 1 menit
+        });
+        
+
+
         function simulateData() {
             // Simulate changing traffic light (only red and green)
-            const lights = ['MERAH', 'HIJAU'];
-            const lightColors = ['status-red', 'status-green'];
-            const currentLight = Math.floor(Math.random() * 2);
-            const currentLightStatus = lights[currentLight];
+            // const lights = ['MERAH', 'HIJAU'];
+            // const lightColors = ['status-red', 'status-green'];
+            // const currentLight = Math.floor(Math.random() * 2);
+            // const currentLightStatus = lights[currentLight];
             
-            const lightElement = document.getElementById('lightStatus');
-            lightElement.textContent = currentLightStatus;
-            lightElement.className = 'status-value ' + lightColors[currentLight];
+            // const lightElement = document.getElementById('lightStatus');
+            // lightElement.textContent = currentLightStatus;
+            // lightElement.className = 'status-value ' + lightColors[currentLight];
             
             // Update the animated traffic light
-            updateTrafficLight(currentLightStatus);
+            // updateTrafficLight(currentLightStatus);
             
             // Simulate people count
-            const peopleCount = Math.floor(Math.random() * 10);
-            document.getElementById('peopleCount').textContent = peopleCount + ' orang';
+            // const peopleCount = Math.floor(Math.random() * 10);
+            // document.getElementById('peopleCount').textContent = peopleCount + ' orang';
             
             // Simulate wait time
-            const waitTime = Math.floor(Math.random() * 60) + 10;
-            document.getElementById('waitTime').textContent = waitTime + ' detik';
+            // const waitTime = Math.floor(Math.random() * 60) + 10;
+            // document.getElementById('waitTime').textContent = waitTime + ' detik';
             
             // Update statistics with some variation
             const baseCrossings = 247;
@@ -2368,7 +2374,7 @@
             }
             
             // Initialize traffic light with red
-            updateTrafficLight('MERAH');
+            // updateTrafficLight('MERAH');
             
             // Initialize chart and table
             generateChartData('today');
@@ -2387,7 +2393,21 @@
             // Update weather data every 10 minutes
             updateWeatherData();
             setInterval(updateWeatherData, 600000);
-            
+            setInterval(() => {
+                fetch('/get_status')
+                    .then(res => res.json())
+                    .then(data => {
+                        updateTrafficLight(data.status);
+                        document.getElementById('peopleCount').innerText = data.count_middle;
+                        const lightColors = ['status-red', 'status-green'];
+                        const lightElement = document.getElementById('lightStatus');
+                        lightElement.textContent = data.status;
+                        lightElement.className = 'status-value ' + lightColors[data.status === 'STOP' ? 0 : 1];
+                        document.getElementById('waitTime').innerText = data.crossing_duration + ' detik';
+                        // document.getElementById('lightStatus').innerText = data.status;
+                        // document.getElementById('fps').innerText = data.fps;
+                    });
+            }, 100);
             // Set default dates for custom period
             const today = new Date();
             const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -2400,10 +2420,11 @@
                 setTimeout(updateChart, 100);
             });
         });
+
     </script>
     <footer style="background: var(--surface-color); border-top: 1px solid var(--border-light); padding: 1rem 2rem; color: var(--text-muted); margin-top: 2rem;">
       <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-        <img src="{{ url_for('static', filename='assets/logo_utama_fix.png') }}" alt="Logo" style="width: 40px; height: 40px; border-radius: 8px;">
+        <img src="{{ url_for('static', filename='assets/logo_utama_fix.png') }}" alt="Logo" style="width: 60px; height: 40px; border-radius: 8px;">
         <div style="text-align: left;">
           <div><small>&copy; 2025 Smart Pedestrian Crossing. Semua Hak Dilindungi.</small></div>
           <div><small>Dikembangkan oleh Tim Informatika Universitas Pembangunan Jaya X PT. MarkTel</small></div>
@@ -2411,4 +2432,5 @@
       </div>
     </footer>
 </body>
+
 </html>

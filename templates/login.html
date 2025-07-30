@@ -205,7 +205,7 @@
             box-shadow: var(--shadow);
         }
 
-        .forgot-password {
+        /* .forgot-password {
             color: var(--gray-500);
             font-size: 0.875rem;
             text-decoration: none;
@@ -213,11 +213,11 @@
             transition: color 0.2s ease;
             margin-top: -0.2rem;
             cursor: pointer;
-        }
+        } */
 
-        .forgot-password:hover {
+        /* .forgot-password:hover {
             color: var(--primary-blue);
-        }
+        } */
 
         .bottom-logo-container {
             align-items: center;
@@ -227,7 +227,7 @@
             margin: 0;
             padding: 0;
             z-index: 999;
-            width: 545px;
+            width: 540px;
             height: auto;
         }
 
@@ -344,7 +344,7 @@
         }
 
         /* Forgot Password Modal Styles */
-        .forgot-password-overlay {
+        /* .forgot-password-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -384,7 +384,7 @@
 
         .forgot-password-overlay.show .forgot-password-modal {
             transform: scale(1) translateY(0);
-        }
+        } */
 
         .modal-close-btn {
             position: absolute;
@@ -411,7 +411,7 @@
             color: var(--gray-600);
         }
 
-        .forgot-password-header {
+        /* .forgot-password-header {
             text-align: center;
             margin-bottom: 2rem;
         }
@@ -426,9 +426,9 @@
             justify-content: center;
             margin: 0 auto 1.5rem;
             box-shadow: var(--shadow-md);
-        }
+        } */
 
-        .forgot-password-icon svg {
+        /* .forgot-password-icon svg {
             width: 24px;
             height: 24px;
             fill: white;
@@ -523,7 +523,7 @@
             border-top: 2px solid var(--white);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-        }
+        } */
 
         .back-to-login {
             text-align: center;
@@ -663,13 +663,13 @@
             .login-form-container {
                 max-width: 100%;
             }
-            .forgot-password-modal {
+            /* .forgot-password-modal {
                 padding: 2rem 1.5rem;
                 margin: 0.5rem;
             }
             .forgot-password-title {
                 font-size: 1.25rem;
-            }
+            } */
             .error-message {
                 padding: 0.625rem 0.875rem;
                 font-size: 0.8125rem;
@@ -709,9 +709,9 @@
         /* Focus styles for accessibility */
         .form-input:focus-visible,
         .login-button:focus-visible,
-        .forgot-password:focus-visible,
+        /* .forgot-password:focus-visible,
         .forgot-password-input:focus-visible,
-        .forgot-password-submit:focus-visible,
+        .forgot-password-submit:focus-visible, */
         .modal-close-btn:focus-visible,
         .error-close:focus-visible {
             outline: 2px solid var(--primary-blue);
@@ -794,63 +794,13 @@
                         Login
                     </button>
                 </form>
-                <a href="#" class="forgot-password" onclick="showForgotPasswordModal(event)">Forgot Password?</a>
+                <!-- <a href="#" class="forgot-password" onclick="showForgotPasswordModal(event)">Forgot Password?</a> -->
             </div>
 
             <div class="bottom-logo-container">
                 <img src="{{ url_for('static', filename='assets/logo_utama.png') }}"
                       alt="Smart Pedestrian Crossing Logo"
                       class="main-logo">
-            </div>
-        </div>
-    </div>
-
-    <!-- Forgot Password Modal -->
-    <div class="forgot-password-overlay" id="forgotPasswordOverlay">
-        <div class="forgot-password-modal">
-            <button class="modal-close-btn" onclick="closeForgotPasswordModal()" aria-label="Close modal">
-                ×
-            </button>
-            
-            <div class="forgot-password-header">
-                <div class="forgot-password-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                        <polyline points="22,6 12,13 2,6"/>
-                    </svg>
-                </div>
-                <h2 class="forgot-password-title">Reset Password</h2>
-                <p class="forgot-password-subtitle">
-                    Enter your email address and we'll send you a link to reset your password.
-                </p>
-            </div>
-
-            <div class="modal-error-message" id="modalErrorMessage"></div>
-            <div class="success-message" id="successMessage">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20,6 9,17 4,12"/>
-                </svg>
-                <span>Password reset link has been sent to your email!</span>
-            </div>
-
-            <form class="forgot-password-form" id="forgotPasswordForm" onsubmit="handleForgotPassword(event)">
-                <input 
-                    type="email" 
-                    id="resetEmail" 
-                    name="email" 
-                    class="forgot-password-input" 
-                    placeholder="Enter your email address"
-                    required
-                    autocomplete="email"
-                >
-                
-                <button type="submit" class="forgot-password-submit" id="forgotPasswordBtn">
-                    Send Reset Link
-                </button>
-            </form>
-
-            <div class="back-to-login">
-                Remember your password? <a href="#" onclick="closeForgotPasswordModal()">Back to Login</a>
             </div>
         </div>
     </div>
@@ -989,165 +939,6 @@
                 }, index * 100);
             });
         });
-
-        // Forgot Password Modal Functions
-        function showForgotPasswordModal(event) {
-            event.preventDefault();
-            const overlay = document.getElementById('forgotPasswordOverlay');
-            overlay.classList.add('show');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-            
-            // Focus on email input after animation
-            setTimeout(() => {
-                document.getElementById('resetEmail').focus();
-            }, 300);
-        }
-
-        function closeForgotPasswordModal() {
-            const overlay = document.getElementById('forgotPasswordOverlay');
-            overlay.classList.remove('show');
-            document.body.style.overflow = ''; // Restore scrolling
-            
-            // Reset form and messages
-            setTimeout(() => {
-                document.getElementById('forgotPasswordForm').reset();
-                document.getElementById('modalErrorMessage').classList.remove('show');
-                document.getElementById('successMessage').classList.remove('show');
-                
-                const submitBtn = document.getElementById('forgotPasswordBtn');
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Send Reset Link';
-            }, 300);
-        }
-
-        function handleForgotPassword(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('resetEmail').value.trim();
-            const submitBtn = document.getElementById('forgotPasswordBtn');
-            const errorMessage = document.getElementById('modalErrorMessage');
-            const successMessage = document.getElementById('successMessage');
-            
-            // Hide previous messages
-            errorMessage.classList.remove('show');
-            successMessage.classList.remove('show');
-            
-            // Basic email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                errorMessage.textContent = 'Please enter a valid email address';
-                errorMessage.classList.add('show');
-                return;
-            }
-            
-            // Show loading state
-            submitBtn.classList.add('loading');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
-            
-            // Simulate API call to send reset email
-            setTimeout(() => {
-                // Hide loading state
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Send Reset Link';
-                
-                // In a real application, you would make an API call here
-                // For demo purposes, we'll simulate success for any valid email
-                
-                // Simulate checking if email exists (you can customize this list)
-                const validEmails = [
-                    'admin@example.com', 
-                    'user@example.com', 
-                    'test@marktel.com',
-                    'admin@marktel.com',
-                    'support@smartcrossing.com'
-                ];
-                
-                // For demo: accept any valid email format
-                if (emailRegex.test(email)) {
-                    // Show success message
-                    successMessage.classList.add('show');
-                    
-                    // Auto close modal after 4 seconds
-                    setTimeout(() => {
-                        closeForgotPasswordModal();
-                    }, 4000);
-                    
-                    // In real implementation, send POST request to your Flask backend:
-                    /*
-                    fetch('/forgot-password', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ email: email })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            successMessage.classList.add('show');
-                            setTimeout(() => {
-                                closeForgotPasswordModal();
-                            }, 4000);
-                        } else {
-                            errorMessage.textContent = data.message || 'Failed to send reset email';
-                            errorMessage.classList.add('show');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        errorMessage.textContent = 'Network error. Please try again.';
-                        errorMessage.classList.add('show');
-                    });
-                    */
-                    
-                } else {
-                    errorMessage.textContent = 'Please enter a valid email address';
-                    errorMessage.classList.add('show');
-                }
-            }, 2000); // Simulate 2 second API call
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('forgotPasswordOverlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeForgotPasswordModal();
-            }
-        });
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const overlay = document.getElementById('forgotPasswordOverlay');
-                if (overlay.classList.contains('show')) {
-                    closeForgotPasswordModal();
-                }
-            }
-        });
-
-        // Enhanced modal input interactions
-        document.getElementById('resetEmail').addEventListener('focus', function() {
-            this.style.transform = 'translateY(-1px)';
-        });
-
-        document.getElementById('resetEmail').addEventListener('blur', function() {
-            this.style.transform = 'translateY(0)';
-        });
-
-        // Initialize page - clear any error states on refresh
-        document.addEventListener('DOMContentLoaded', function() {
-            checkForErrors();
-            
-            // Check for URL parameters that might indicate an error
-            const urlParams = new URLSearchParams(window.location.search);
-            const errorParam = urlParams.get('error');
-            
-            if (errorParam && !document.getElementById('errorMessage')) {
-                showErrorNotification(decodeURIComponent(errorParam));
-            }
-        });
-    </script>
-</body>
+        </script>
+    </body>
 </html>
