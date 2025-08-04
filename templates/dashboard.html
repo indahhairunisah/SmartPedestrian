@@ -241,8 +241,7 @@
         .cam-container {
             background: #000;
             border-radius: 16px;
-            /* aspect-ratio: 16/9; */
-            width: 1280;
+            aspect-ratio: 16/9;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1312,7 +1311,7 @@
     <header class="header">
         <div class="header-left">
             <div class="logo-small">
-                <img src="{{ url_for('static', filename='assets/logo_utama_fix.png') }}" alt="Smart Pedestrian Crossing Logo">
+                <img id="logo-small"src="{{ url_for('static', filename='assets/logo_utama_fix.png') }}"  alt="Smart Pedestrian Crossing Logo">
             </div>
             <h1 class="header-title">Smart Pedestrian Crossing</h1>
         </div>
@@ -1362,7 +1361,7 @@
                 </h2>
                 <div class="cam-content">
                     <div class="cam-container">
-                        <img src="{{ url_for('video_feed') }}" width="100%" style="border-radius: 12px; object-fit: cover;" alt="Live Camera Feed">
+                        <img id="livecam" width="100%" style="border-radius: 12px; object-fit: cover;" alt="Live Camera Feed">
                         <div class="cam-overlay">LIVE</div>
                     </div>
                     
@@ -1391,10 +1390,6 @@
                     <span class="status-label">Waktu Penyebarangan</span>
                     <span class="status-value status-yellow" id="waitTime"></span>
                 </div>
-                <!-- <div class="status-item">
-                    <span class="status-label">Status Sistem</span>
-                    <span class="status-value status-green" id="systemStatus">AKTIF</span>
-                </div> -->
             </div>
         </div>
 
@@ -1725,11 +1720,12 @@
     <script>
         let currentPeriod = 'today';
         let chartData = [];
+        let chartRefreshInterval;
         let weatherData = {
             weather_desc: '{{ weather.weather_desc }}',
-            temperature: '{{  weather.temperature }}',
-            humidity: '{{  weather.humidity }}',
-            windspeed: '{{  weather.windspeed }}'
+            temperature: '{{ weather.temperature }}',
+            humidity: '{{ weather.humidity }}',
+            windspeed: '{{ weather.windspeed }}'
         };
 
         function toggleTheme() {
@@ -1802,120 +1798,93 @@
             }
         }
 
-        // Function to get peak hour from today's data
-        function getTodaysPeakHour() {
-            // In a real application, this would query the database for today's crossing data
-            // and find the hour with the most crossings
-            
-            // Simulated hourly data for today
-            const hourlyData = [
-                { hour: '06:00', crossings: 15 },
-                { hour: '07:00', crossings: 45 },
-                { hour: '08:00', crossings: 78 },
-                { hour: '09:00', crossings: 32 },
-                { hour: '10:00', crossings: 28 },
-                { hour: '11:00', crossings: 35 },
-                { hour: '12:00', crossings: 52 },
-                { hour: '13:00', crossings: 41 },
-                { hour: '14:00', crossings: 38 },
-                { hour: '15:00', crossings: 55 },
-                { hour: '16:00', crossings: 67 },
-                { hour: '17:00', crossings: 89 }, // Peak hour
-                { hour: '18:00', crossings: 72 },
-                { hour: '19:00', crossings: 43 },
-                { hour: '20:00', crossings: 25 }
-            ];
-            
-            // Find the hour with maximum crossings
-            const peakHourData = hourlyData.reduce((max, current) => 
-                current.crossings > max.crossings ? current : max
-            );
-            
-            return peakHourData.hour;
-        }
-
-        // Fetch real-time weather data
-        async function updateWeatherData() {
+        // Update fungsi generateChartData untuk menggunakan API
+        async function generateChartData(period) {
             try {
-            const response = await fetch('/api/weather');
-            if (response.ok) {
+                let apiUrl = `/api/grafik-periode?mode=${period}`;
+                
+                // Tambahkan parameter tanggal untuk custom period
+                if (period === 'custom') {
+                    const startDate = document.getElementById('startDate').value;
+                    const endDate = document.getElementById('endDate').value;
+                    
+                    if (!startDate || !endDate) {
+                        console.warn('Custom period selected but dates not provided');
+                        return;
+                    }
+                    
+                    apiUrl += `&start=${startDate}&end=${endDate}`;
+                }
+                
+                const response = await fetch(apiUrl);
                 const data = await response.json();
-                document.getElementById('weatherCondition').textContent = data.weather.weather_desc;
-                document.getElementById('temperature').textContent = data.weather.temperature + '°C';
-                document.getElementById('humidity').textContent = data.weather.humidity + '%';
-                document.getElementById('windSpeed').textContent = data.weather.windspeed + ' km/h';
-            }
+                
+                if (!data.success) {
+                    console.error('API Error:', data.error);
+                    generateDummyChartData(period);
+                    return;
+                }
+                
+                // Reset chartData
+                chartData = [];
+                
+                // Populate chartData dengan data dari API
+                for (let i = 0; i < data.labels.length; i++) {
+                    const label = data.labels[i];
+                    const crossingValue = data.data_crossings[i] || 0;
+                    const durationValue = data.data_durations[i] || 0;
+                    
+                    // Tentukan apakah ini peak period
+                    const isPeak = (data.jam_sibuk === label);
+                    
+                    chartData.push({
+                        label: label,
+                        value: crossingValue,
+                        duration: durationValue,
+                        isPeak: isPeak,
+                        details: {
+                            date: label,
+                            totalCrossings: crossingValue,
+                            avgDuration: `${durationValue}s`,
+                            peakHour: data.jam_sibuk || 'N/A',
+                            systemUptime: '98%', // Static for now
+                            detectionAccuracy: '95%', // Static for now
+                            responseTime: '150ms', // Static for now
+                            maintenanceStatus: 'Normal',
+                            avgWaitTime: `${Math.floor(durationValue * 0.8)}s`,
+                            peakTrafficDuration: '45 menit'
+                        }
+                    });
+                }
+                
+                console.log(`✅ Chart data loaded for ${period}:`, chartData);
+                
             } catch (error) {
-            console.error('❌ Gagal ambil data cuaca:', error);
+                console.error('❌ Error fetching chart data:', error);
+                
+                // Fallback ke data dummy jika API gagal
+                generateDummyChartData(period);
             }
         }
 
-        // Panggil saat halaman selesai dimuat
-        document.addEventListener('DOMContentLoaded', () => {
-            updateWeatherData();
-            setInterval(updateWeatherData, 60000); // auto-refresh tiap 1 menit
-        });
-        
-
-
-        function simulateData() {
-            // Simulate changing traffic light (only red and green)
-            // const lights = ['MERAH', 'HIJAU'];
-            // const lightColors = ['status-red', 'status-green'];
-            // const currentLight = Math.floor(Math.random() * 2);
-            // const currentLightStatus = lights[currentLight];
-            
-            // const lightElement = document.getElementById('lightStatus');
-            // lightElement.textContent = currentLightStatus;
-            // lightElement.className = 'status-value ' + lightColors[currentLight];
-            
-            // Update the animated traffic light
-            // updateTrafficLight(currentLightStatus);
-            
-            // Simulate people count
-            // const peopleCount = Math.floor(Math.random() * 10);
-            // document.getElementById('peopleCount').textContent = peopleCount + ' orang';
-            
-            // Simulate wait time
-            // const waitTime = Math.floor(Math.random() * 60) + 10;
-            // document.getElementById('waitTime').textContent = waitTime + ' detik';
-            
-            // Update statistics with some variation
-            const baseCrossings = 247;
-            const variation = Math.floor(Math.random() * 20) - 10;
-            document.getElementById('todayCrossings').textContent = baseCrossings + variation;
-            
-            const avgDuration = Math.floor(Math.random() * 20) + 25;
-            document.getElementById('avgDuration').textContent = avgDuration + 's';
-            
-            // Update peak hour (in real app, this would come from database)
-            const peakHour = getTodaysPeakHour();
-            document.getElementById('peakHour').textContent = peakHour;
-        }
-
-        function generateChartData(period) {
+        // Fungsi fallback untuk data dummy
+        function generateDummyChartData(period) {
             chartData = [];
             let dataPoints, labels;
             
             switch(period) {
                 case 'today':
-                    // Hourly data for today
                     labels = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
                     dataPoints = [45, 120, 85, 95, 110, 180, 220, 90];
                     break;
                 case 'week':
-                    // Daily data for this week
-                    labels = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+                    labels = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
                     dataPoints = [280, 320, 290, 310, 350, 180, 150];
                     break;
                 case 'month':
-                    // Weekly data for this month
                     labels = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'];
                     dataPoints = [1850, 2100, 1950, 2200];
                     break;
-                case 'custom':
-                    // Custom period is handled by updateCustomPeriod function
-                    return;
                 default:
                     labels = ['Data 1', 'Data 2', 'Data 3', 'Data 4', 'Data 5'];
                     dataPoints = [150, 200, 180, 220, 190];
@@ -1926,10 +1895,13 @@
                 chartData.push({
                     label: labels[i],
                     value: dataPoints[i],
+                    duration: Math.floor(Math.random() * 20) + 25,
                     isPeak: isPeak,
                     details: generateDetailData(labels[i], dataPoints[i], period)
                 });
             }
+            
+            console.log('⚠️ Using dummy data for', period);
         }
 
         function generateDetailData(label, value, period) {
@@ -2038,7 +2010,8 @@
             tooltip.style.opacity = '0';
         }
 
-        function setPeriod(period) {
+        // Update fungsi setPeriod untuk menggunakan async/await
+        async function setPeriod(period) {
             currentPeriod = period;
             
             // Update active button
@@ -2058,10 +2031,19 @@
             // Update table title and header based on period
             updateTableTitleAndHeader(period);
             
-            // Update chart and table
-            generateChartData(period);
-            updateChart();
-            updateHistoryTable(period);
+            // Show loading state
+            showChartLoading(true);
+            
+            try {
+                // Update chart and table with real data
+                await generateChartData(period);
+                updateChart();
+                await updateHistoryTable(period);
+            } catch (error) {
+                console.error('Error updating period:', error);
+            } finally {
+                showChartLoading(false);
+            }
         }
 
         function updateTableTitleAndHeader(period) {
@@ -2108,117 +2090,113 @@
             }
         }
 
-        function updateHistoryTable(period) {
+        // Update fungsi updateCustomPeriod untuk menggunakan async/await
+        async function updateCustomPeriod() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate && endDate) {
+                showChartLoading(true);
+                
+                try {
+                    await generateChartData('custom');
+                    updateChart();
+                    await updateHistoryTable('custom');
+                } catch (error) {
+                    console.error('Error updating custom period:', error);
+                } finally {
+                    showChartLoading(false);
+                }
+            }
+        }
+
+        // Fungsi untuk menampilkan loading state
+        function showChartLoading(isLoading) {
+            const chartContainer = document.querySelector('.chart-container');
+            
+            if (isLoading) {
+                chartContainer.style.opacity = '0.5';
+                chartContainer.style.pointerEvents = 'none';
+                
+                // Tambahkan loading indicator jika belum ada
+                if (!document.getElementById('chartLoading')) {
+                    const loadingDiv = document.createElement('div');
+                    loadingDiv.id = 'chartLoading';
+                    loadingDiv.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: var(--surface-color);
+                        padding: 1rem 2rem;
+                        border-radius: 8px;
+                        box-shadow: var(--shadow-md);
+                        z-index: 10;
+                        font-weight: 600;
+                        color: var(--text-primary);
+                    `;
+                    loadingDiv.textContent = 'Memuat data...';
+                    chartContainer.appendChild(loadingDiv);
+                }
+            } else {
+                chartContainer.style.opacity = '1';
+                chartContainer.style.pointerEvents = 'auto';
+                
+                // Hapus loading indicator
+                const loadingDiv = document.getElementById('chartLoading');
+                if (loadingDiv) {
+                    loadingDiv.remove();
+                }
+            }
+        }
+
+        // Update fungsi updateHistoryTable untuk menggunakan data real
+        async function updateHistoryTable(period) {
             const tableData = document.getElementById('historyTableData');
             let rows = '';
             
-            switch(period) {
-                case 'today':
-                    // Show hourly data for today
-                    const hours = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
-                    hours.forEach((hour, index) => {
-                        const crossings = Math.floor(Math.random() * 100) + 50;
-                        const peakPeriod = crossings > 120 ? 'Ya' : 'Tidak';
-                        const duration = Math.floor(Math.random() * 20) + 25 + 's';
-                        
-                        const detailData = generateDetailData(hour, crossings, period);
-                        
-                        rows += `
-                            <div class="table-row" onclick="showDetailModal({
-                                label: '${hour}',
-                                value: ${crossings},
-                                details: ${JSON.stringify(detailData).replace(/"/g, '&quot;')}
-                            })">
-                                <div class="table-cell">${hour}</div>
-                                <div class="table-cell">${crossings}</div>
-                                <div class="table-cell">${peakPeriod}</div>
-                                <div class="table-cell">${duration}</div>
-                            </div>
-                        `;
-                    });
-                    break;
-                    
-                case 'week':
-                    // Show daily data for this week
-                    const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-                    days.forEach((day, index) => {
-                        const crossings = Math.floor(Math.random() * 200) + 150;
-                        const peakHour = Math.floor(Math.random() * 4) + 16 + ':' + (Math.floor(Math.random() * 6) * 10);
-                        const duration = Math.floor(Math.random() * 20) + 25 + 's';
-                        
-                        const detailData = generateDetailData(day, crossings, period);
-                        
-                        rows += `
-                            <div class="table-row" onclick="showDetailModal({
-                                label: '${day}',
-                                value: ${crossings},
-                                details: ${JSON.stringify(detailData).replace(/"/g, '&quot;')}
-                            })">
-                                <div class="table-cell">${day}</div>
-                                <div class="table-cell">${crossings}</div>
-                                <div class="table-cell">${peakHour}</div>
-                                <div class="table-cell">${duration}</div>
-                            </div>
-                        `;
-                    });
-                    break;
-                    
-                case 'month':
-                    // Show daily data for the month (last 30 days)
-                    for (let i = 0; i < 30; i++) {
-                        const date = new Date();
-                        date.setDate(date.getDate() - i);
-                        const dateStr = date.toLocaleDateString('id-ID', {
-                             day: '2-digit',
-                             month: '2-digit',
-                             year: 'numeric'
-                         });
-                        
-                        const crossings = Math.floor(Math.random() * 300) + 100;
-                        const peakHour = Math.floor(Math.random() * 4) + 16 + ':' + (Math.floor(Math.random() * 6) * 10);
-                        const duration = Math.floor(Math.random() * 20) + 25 + 's';
-                        
-                        const detailData = generateDetailData(dateStr, crossings, period);
-                        
-                        rows += `
-                            <div class="table-row" onclick="showDetailModal({
-                                label: '${dateStr}',
-                                value: ${crossings},
-                                details: ${JSON.stringify(detailData).replace(/"/g, '&quot;')}
-                            })">
-                                <div class="table-cell">${dateStr}</div>
-                                <div class="table-cell">${crossings}</div>
-                                <div class="table-cell">${peakHour}</div>
-                                <div class="table-cell">${duration}</div>
-                            </div>
-                        `;
-                        
-                        if (i >= 9) break; // Limit to 10 rows for display
-                    }
-                    break;
-                    
-                case 'custom':
-                    // Show data based on custom period (use chart data)
+            try {
+                // Gunakan data dari chartData yang sudah di-load
+                if (chartData && chartData.length > 0) {
                     chartData.forEach((data) => {
-                        const peakHour = data.details.peakHour;
-                        const duration = data.details.TotalDuration;
+                        const detailDataStr = JSON.stringify(data).replace(/"/g, '&quot;');
                         
                         rows += `
-                            <div class="table-row" onclick="showDetailModal(${JSON.stringify(data).replace(/"/g, '&quot;')})">
+                            <div class="table-row" onclick="showDetailModal(${detailDataStr})">
                                 <div class="table-cell">${data.label}</div>
                                 <div class="table-cell">${data.value}</div>
-                                <div class="table-cell">${peakHour}</div>
-                                <div class="table-cell">${duration}</div>
+                                <div class="table-cell">${data.details.peakHour}</div>
+                                <div class="table-cell">${data.details.avgDuration}</div>
                             </div>
                         `;
                     });
-                    break;
+                } else {
+                    // Jika tidak ada data, tampilkan pesan
+                    rows = `
+                        <div class="table-row">
+                            <div class="table-cell" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">
+                                Tidak ada data untuk periode ini
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                tableData.innerHTML = rows;
+                
+            } catch (error) {
+                console.error('Error updating history table:', error);
+                tableData.innerHTML = `
+                    <div class="table-row">
+                        <div class="table-cell" style="grid-column: 1 / -1; text-align: center; color: var(--danger-color);">
+                            Error memuat data
+                        </div>
+                    </div>
+                `;
             }
-            
-            tableData.innerHTML = rows;
         }
 
-        function showDetailModal(data) {
+        // Update fungsi showDetailModal untuk menampilkan detail dari API
+        async function showDetailModal(data) {
             const modal = document.getElementById('detailModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalSummary = document.getElementById('modalSummary');
@@ -2227,35 +2205,77 @@
             // Set modal title
             modalTitle.textContent = `Detail Analisis - ${data.label}`;
             
-            // Create summary cards (removed efficiency system)
-            modalSummary.innerHTML = `
-                <div class="modal-card">
-                    <div class="modal-card-title">Total Penyeberangan</div>
-                    <div class="modal-card-value">${data.value}</div>
-                    <div class="modal-card-description">Jumlah total pejalan kaki yang menyeberang</div>
-                </div>
-                <div class="modal-card">
-                    <div class="modal-card-title">Jam Sibuk</div>
-                    <div class="modal-card-value">${data.details.peakHour}</div>
-                    <div class="modal-card-description">Waktu dengan aktivitas tertinggi</div>
-                </div>
-                <div class="modal-card">
-                    <div class="modal-card-title">Durasi Rata-rata</div>
-                    <div class="modal-card-value">${data.details.TotalDuration}</div>
-                    <div class="modal-card-description">Waktu rata-rata penyeberangan</div>
-                </div>
-            `;
-            
-            // Traffic analysis details (reduced menu items)
-            trafficAnalysis.innerHTML = `
-                <li><span class="detail-label">Durasi Jam Sibuk</span><span class="detail-value">${data.details.peakTrafficDuration}</span></li>
-                <li><span class="detail-label">Waktu Tunggu Rata-rata</span><span class="detail-value">${data.details.avgWaitTime}</span></li>
-                <li><span class="detail-label">Tingkat Kepadatan</span><span class="detail-value">${data.value > 200 ? 'Tinggi' : data.value > 100 ? 'Sedang' : 'Rendah'}</span></li>
-                <li><span class="detail-label">Frekuensi Penyeberangan</span><span class="detail-value">${Math.floor(data.value / 24)} per jam</span></li>
-            `;
+            // Show loading state
+            modalSummary.innerHTML = '<div style="text-align: center; padding: 2rem;">Memuat detail...</div>';
+            trafficAnalysis.innerHTML = '<li>Memuat data...</li>';
             
             // Show modal
             modal.classList.add('active');
+            
+            try {
+                // Fetch detail data dari API
+                const response = await fetch(`/api/detail-periode?mode=${currentPeriod}&periode=${encodeURIComponent(data.label)}`);
+                const detailData = await response.json();
+                
+                if (detailData.success) {
+                    // Update summary cards dengan data real
+                    modalSummary.innerHTML = `
+                        <div class="modal-card">
+                            <div class="modal-card-title">Total Penyeberangan</div>
+                            <div class="modal-card-value">${detailData.total_crossings}</div>
+                            <div class="modal-card-description">Jumlah total pejalan kaki yang menyeberang</div>
+                        </div>
+                        <div class="modal-card">
+                            <div class="modal-card-title">Durasi Rata-rata</div>
+                            <div class="modal-card-value">${detailData.avg_duration}s</div>
+                            <div class="modal-card-description">Waktu rata-rata penyeberangan</div>
+                        </div>
+                        <div class="modal-card">
+                            <div class="modal-card-title">Total Records</div>
+                            <div class="modal-card-value">${detailData.total_records}</div>
+                            <div class="modal-card-description">Jumlah aktivitas tercatat</div>
+                        </div>
+                    `;
+                    
+                    // Update traffic analysis dengan data real
+                    trafficAnalysis.innerHTML = `
+                        <li><span class="detail-label">Periode</span><span class="detail-value">${detailData.periode}</span></li>
+                        <li><span class="detail-label">Waktu Mulai</span><span class="detail-value">${detailData.period_start}</span></li>
+                        <li><span class="detail-label">Waktu Selesai</span><span class="detail-value">${detailData.period_end}</span></li>
+                        <li><span class="detail-label">Total Penyeberangan</span><span class="detail-value">${detailData.total_crossings}</span></li>
+                        <li><span class="detail-label">Durasi Rata-rata</span><span class="detail-value">${detailData.avg_duration}s</span></li>
+                        <li><span class="detail-label">Tingkat Aktivitas</span><span class="detail-value">${detailData.total_crossings > 100 ? 'Tinggi' : detailData.total_crossings > 50 ? 'Sedang' : 'Rendah'}</span></li>
+                    `;
+                } else {
+                    throw new Error(detailData.error || 'Failed to fetch detail data');
+                }
+                
+            } catch (error) {
+                console.error('Error fetching detail data:', error);
+                
+                // Fallback ke data yang ada
+                modalSummary.innerHTML = `
+                    <div class="modal-card">
+                        <div class="modal-card-title">Total Penyeberangan</div>
+                        <div class="modal-card-value">${data.value}</div>
+                        <div class="modal-card-description">Jumlah total pejalan kaki yang menyeberang</div>
+                    </div>
+                    <div class="modal-card">
+                        <div class="modal-card-title">Durasi Rata-rata</div>
+                        <div class="modal-card-value">${data.duration}s</div>
+                        <div class="modal-card-description">Waktu rata-rata penyeberangan</div>
+                    </div>
+                    <div class="modal-card">
+                        <div class="modal-card-title">Status</div>
+                        <div class="modal-card-value">Error</div>
+                        <div class="modal-card-description">Gagal memuat detail</div>
+                    </div>
+                `;
+                
+                trafficAnalysis.innerHTML = `
+                    <li><span class="detail-label">Error</span><span class="detail-value">Gagal memuat data detail</span></li>
+                `;
+            }
         }
 
         function closeModal() {
@@ -2269,99 +2289,51 @@
                 closeModal();
             }
         });
-
-        function updateCustomPeriod() {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-            
-            if (startDate && endDate) {
-                generateCustomChartData(startDate, endDate);
-                updateChart();
-                updateHistoryTable('custom');
+        
+        // Fetch real-time weather data
+        async function updateWeatherData() {
+            try {
+                const response = await fetch('/api/weather');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('weatherCondition').textContent = data.weather.weather_desc;
+                    document.getElementById('temperature').textContent = data.weather.temperature + '°C';
+                    document.getElementById('humidity').textContent = data.weather.humidity + '%';
+                    document.getElementById('windSpeed').textContent = data.weather.windspeed + ' km/h';
+                }
+            } catch (error) {
+                console.error('❌ Gagal ambil data cuaca:', error);
             }
         }
 
-        function generateCustomChartData(startDate, endDate) {
-            chartData = [];
-            
-            // Convert string dates to Date objects
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            
-            // Calculate the difference in days
-            const diffTime = Math.abs(end - start);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            
-            // If more than 14 days, group by weeks
-            if (diffDays > 14) {
-                const weeks = Math.ceil(diffDays / 7);
-                for (let i = 0; i < weeks; i++) {
-                    const weekStart = new Date(start);
-                    weekStart.setDate(start.getDate() + (i * 7));
-                    
-                    const weekEnd = new Date(weekStart);
-                    weekEnd.setDate(weekStart.getDate() + 6);
-                    
-                    if (weekEnd > end) {
-                        weekEnd.setTime(end.getTime());
-                    }
-                    
-                    const weekStartStr = weekStart.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
-                    const weekEndStr = weekEnd.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
-                    
-                    const label = `${weekStartStr} - ${weekEndStr}`;
-                    const value = Math.floor(Math.random() * 1000) + 500;
-                    const isPeak = i === Math.floor(weeks / 2); // Just for demo
-                    
-                    chartData.push({
-                        label: label,
-                        value: value,
-                        isPeak: isPeak,
-                        details: generateDetailData(label, value, 'custom')
-                    });
-                }
-            } else {
-                // Show daily data
-                for (let i = 0; i < diffDays; i++) {
-                    const currentDate = new Date(start);
-                    currentDate.setDate(start.getDate() + i);
-                    
-                    const dateStr = currentDate.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
-                    const value = Math.floor(Math.random() * 300) + 100;
-                    const isPeak = i === Math.floor(diffDays / 2); // Just for demo
-                    
-                    chartData.push({
-                        label: dateStr,
-                        value: value,
-                        isPeak: isPeak,
-                        details: generateDetailData(dateStr, value, 'custom')
-                    });
-                }
-            }
+        function simulateData() {
+            // This function can be used for any additional simulation if needed
+            // Most real-time data is now handled by the API calls below
         }
 
-        function exportData() {
-            // Show export success notification
-            const exportSuccess = document.getElementById('exportSuccess');
-            exportSuccess.classList.add('active');
+        // Tambahkan auto-refresh untuk chart
+        function startChartAutoRefresh() {
+            // Clear existing interval
+            if (chartRefreshInterval) {
+                clearInterval(chartRefreshInterval);
+            }
             
-            // Hide notification after 3 seconds
-            setTimeout(() => {
-                exportSuccess.classList.remove('active');
-            }, 3000);
-            
-            // In a real application, this would generate and download a CSV/PDF file
-            // For this demo, we'll just simulate the export
-            
-            console.log('Exporting data for period:', currentPeriod);
-            console.log('Chart data:', chartData);
-            
-            // Here you would typically use a library like jsPDF, html2canvas, or 
-            // create a CSV file and trigger a download
+            // Set new interval untuk refresh setiap 30 detik
+            chartRefreshInterval = setInterval(async () => {
+                try {
+                    console.log('🔄 Auto-refreshing chart data...');
+                    await generateChartData(currentPeriod);
+                    updateChart();
+                    await updateHistoryTable(currentPeriod);
+                    console.log('✅ Chart auto-refresh completed');
+                } catch (error) {
+                    console.error('❌ Chart auto-refresh failed:', error);
+                }
+            }, 30000); // 30 seconds
         }
 
         // Load saved theme and initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             
@@ -2372,27 +2344,36 @@
                 sunIcon.style.display = 'none';
                 moonIcon.style.display = 'block';
             }
-            
-            // Initialize traffic light with red
-            // updateTrafficLight('MERAH');
-            
-            // Initialize chart and table
-            generateChartData('today');
-            updateChart();
-            updateTableTitleAndHeader('today');
-            updateHistoryTable('today');
+
+            // Initialize chart and table dengan data real
+            try {
+                await generateChartData('today');
+                updateChart();
+                updateTableTitleAndHeader('today');
+                await updateHistoryTable('today');
+                console.log('✅ Dashboard initialized with real data');
+            } catch (error) {
+                console.error('❌ Error initializing dashboard:', error);
+                // Fallback ke data dummy
+                generateDummyChartData('today');
+                updateChart();
+                updateTableTitleAndHeader('today');
+                updateHistoryTable('today');
+            }
             
             // Start time updates
             updateTime();
             setInterval(updateTime, 1000);
             
-            // Start data simulation
+            // Start data simulation untuk status real-time
             simulateData();
             setInterval(simulateData, 5000);
             
             // Update weather data every 10 minutes
             updateWeatherData();
             setInterval(updateWeatherData, 600000);
+            
+            // Real-time status updates
             setInterval(() => {
                 fetch('/get_status')
                     .then(res => res.json())
@@ -2404,10 +2385,31 @@
                         lightElement.textContent = data.status;
                         lightElement.className = 'status-value ' + lightColors[data.status === 'STOP' ? 0 : 1];
                         document.getElementById('waitTime').innerText = data.crossing_duration + ' detik';
-                        // document.getElementById('lightStatus').innerText = data.status;
-                        // document.getElementById('fps').innerText = data.fps;
-                    });
-            }, 100);
+                    })
+                    // .catch(error => console.error('❌ Error fetching status:', error));
+                    
+                fetch('/today_crossing')
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('todayCrossings').innerText = data.total_crossing_today;
+                    })
+                    .catch(error => console.error('❌ Error fetching today crossings:', error));
+                    
+                fetch('/Tcrossing_day')
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('avgDuration').innerText = data.average_crossing_duration + 's';
+                    })
+                    .catch(error => console.error('❌ Error fetching avg duration:', error));
+                    
+                fetch('/jamSibuk')
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('peakHour').innerText = data.busiest_hour;
+                    })
+                    .catch(error => console.error('❌ Error fetching peak hour:', error));
+            }, 1000);
+            
             // Set default dates for custom period
             const today = new Date();
             const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -2419,8 +2421,24 @@
             window.addEventListener('resize', () => {
                 setTimeout(updateChart, 100);
             });
-        });
 
+            // WebSocket connection untuk live camera
+            try {
+                const ws = new WebSocket("ws://192.168.202.168:8765"); 
+                ws.onmessage = (event) => {
+                    const frameBase64 = event.data;
+                    document.getElementById("livecam").src = "data:image/jpeg;base64," + frameBase64;
+                };
+                ws.onerror = (error) => {
+                    console.error('❌ WebSocket error:', error);
+                };
+            } catch (error) {
+                console.error('❌ WebSocket connection failed:', error);
+            }
+
+            // Start chart auto-refresh
+            startChartAutoRefresh();
+        });
     </script>
     <footer style="background: var(--surface-color); border-top: 1px solid var(--border-light); padding: 1rem 2rem; color: var(--text-muted); margin-top: 2rem;">
       <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
@@ -2432,5 +2450,4 @@
       </div>
     </footer>
 </body>
-
 </html>
