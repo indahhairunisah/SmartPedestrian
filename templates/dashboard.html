@@ -250,6 +250,13 @@
             box-shadow: var(--shadow-lg);
         }
 
+        .cam-container iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        object-fit: cover;
+        }
+
         .cam-placeholder {
             color: #666;
             font-size: 1.125rem;
@@ -1361,7 +1368,7 @@
                 </h2>
                 <div class="cam-content">
                     <div class="cam-container">
-                        <img id="livecam" width="100%" style="border-radius: 12px; object-fit: cover;" alt="Live Camera Feed">
+                        <iframe src="http://192.168.202.168:8889/pedestrian" allow="autoplay; fullscreen"></iframe>
                         <div class="cam-overlay">LIVE</div>
                     </div>
                     
@@ -2451,3 +2458,4 @@
     </footer>
 </body>
 </html>
+

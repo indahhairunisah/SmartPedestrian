@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Pedestrian Crossing - Dashboard</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/logo_utama.png') }}">
+  <!-- <link rel="stylesheet" href="/public/style.css"> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="header">
+      <div class="header-left">
+          <div class="logo-small">
+              <img id="logo-small"src="/public/assets/logo_utama_fix.png"  alt="Smart Pedestrian Crossing Logo">
+          </div>
+          <h1 class="header-title">Smart Pedestrian Crossing</h1>
+      </div>
+      <div class="header-right">
+          <button class="info-btn" onclick="showSystemInfo()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 16v-4"/>
+                  <path d="M12 8h.01"/>
+              </svg>
+          </button>
+          <button class="theme-toggle" onclick="toggleTheme()">
+              <svg class="sun-icon" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="5"/>
+                  <line x1="12" y1="1" x2="12" y2="3"/>
+                  <line x1="12" y1="21" x2="12" y2="23"/>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                  <line x1="1" y1="12" x2="3" y2="12"/>
+                  <line x1="21" y1="12" x2="23" y2="12"/>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+              <svg class="moon-icon" viewBox="0 0 24 24" style="display: none;">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+          </button>
+          <div class="user-info">
+              <span>Admin User</span>
+          </div>
+          <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+  </header>
+
+  <!-- Dashboard Content -->
+  <main class="main-content" id="dashboardContent">
+      <div class="current-time">
+          <div class="time-display" id="currentTime">--:--:--</div>
+          <div class="date-display" id="currentDate">-- -- ----</div>
+      </div>
+
+      <div class="dashboard-grid">
+          <div class="live-cam-section">
+              <h2 class="section-title">
+                  <span class="live-indicator"></span>
+                  Live Camera Feed
+              </h2>
+              <div class="cam-content">
+                  <div class="cam-container">
+                      <img id="livecam" width="100%" style="border-radius: 12px; object-fit: cover;" alt="Live Camera Feed">
+                      <div class="cam-overlay">LIVE</div>
+                  </div>
+                  
+                  <div class="traffic-light-container">
+                      <div class="traffic-light-title">Pedestrian Light Status</div>
+                      <div class="traffic-light">
+                          <div class="light red-light" id="redLight"></div>
+                          <div class="light green-light" id="greenLight"></div>
+                      </div>
+                      <div class="traffic-status" id="trafficStatus">MERAH</div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="status-panel">
+              <h2 class="section-title">Status Saat Ini</h2>
+              <div class="status-item">
+                  <span class="status-label">Status Lampu</span>
+                  <span class="status-value status-red" id="lightStatus">MERAH</span>
+              </div>
+              <div class="status-item">
+                  <span class="status-label">Jumlah Penyebrang</span>
+                  <p><span class="status-value" id="peopleCount"></span></p>
+              </div>
+              <div class="status-item">
+                  <span class="status-label">Waktu Penyebarangan</span>
+                  <span class="status-value status-yellow" id="waitTime"></span>
+              </div>
+          </div>
+      </div>
+
+      <!-- Updated Statistics Grid (3 cards) -->
+      <div class="stats-grid">
+          <div class="stat-card">
+              <div class="stat-header">
+                  <span class="stat-title">Statistik Crossing Hari Ini</span>
+                  <div class="stat-icon blue">
+                      <svg viewBox="0 0 24 24">
+                          <path d="M3 3v18h18"/>
+                          <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                      </svg>
+                  </div>
+              </div>
+              <div class="stat-value" id="todayCrossings">247</div>
+              <div class="stat-description">Total penyeberangan hari ini</div>
+          </div>
+
+          <div class="stat-card">
+              <div class="stat-header">
+                  <span class="stat-title">Rata-rata Durasi Crossing</span>
+                  <div class="stat-icon green">
+                      <svg viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="10"/>
+                          <polyline points="12,6 12,12 16,14"/>
+                      </svg>
+                  </div>
+              </div>
+              <div class="stat-value" id="avgDuration">32s</div>
+              <div class="stat-description">Waktu rata-rata penyeberangan</div>
+          </div>
+
+          <!-- New Peak Hours Card -->
+          <div class="stat-card">
+              <div class="stat-header">
+                  <span class="stat-title">Jam Sibuk</span>
+                  <div class="stat-icon orange">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                      </svg>
+                  </div>
+              </div>
+              <div class="stat-value" id="peakHour">17:30</div>
+              <div class="stat-description">Jam dengan penyeberangan terbanyak</div>
+          </div>
+      </div>
+
+      <!-- Environmental Conditions Grid (4 cards) -->
+      <div class="environmental-grid">
+          <div class="env-card">
+              <div class="env-header">
+                  <span class="env-title">Kondisi Cuaca</span>
+                  <div class="env-icon weather">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="5"/>
+                          <line x1="12" y1="1" x2="12" y2="3"/>
+                          <line x1="12" y1="21" x2="12" y2="23"/>
+                          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                          <line x1="1" y1="12" x2="3" y2="12"/>
+                          <line x1="21" y1="12" x2="23" y2="12"/>
+                          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                      </svg>
+                  </div>
+              </div>
+              <div class="env-value" id="weatherCondition"></div>
+              <div class="env-description">Kondisi cuaca saat ini</div>
+          </div>
+
+          <div class="env-card">
+              <div class="env-header">
+                  <span class="env-title">Suhu Udara</span>
+                  <div class="env-icon temp">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/>
+                      </svg>
+                  </div>
+              </div>
+              <div class="env-value" id="temperature"></div>
+              <div class="env-description">Suhu udara real-time</div>
+          </div>
+
+          <div class="env-card">
+              <div class="env-header">
+                  <span class="env-title">Kelembaban</span>
+                  <div class="env-icon humidity">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                      </svg>
+                  </div>
+              </div>
+              <div class="env-value" id="humidity"></div>
+              <div class="env-description">Kelembaban udara saat ini</div>
+          </div>
+
+          <div class="env-card">
+              <div class="env-header">
+                  <span class="env-title">Kecepatan Angin</span>
+                  <div class="env-icon wind">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/>
+                          <path d="M9.6 4.6A2 2 0 1 1 11 8H2"/>
+                          <path d="M12.6 19.4A2 2 0 1 0 14 16H2"/>
+                      </svg>
+                  </div>
+              </div>
+              <div class="env-value" id="windSpeed"></div>
+              <div class="env-description">Kecepatan angin real-time</div>
+          </div>
+      </div>
+
+      <!-- History Section -->
+      <div class="history-section">
+          <div class="history-header">
+              <h2 class="section-title">Analisis Historis</h2>
+              <div class="period-selector">
+                  <button class="period-btn active" onclick="setPeriod('today', event)">Hari Ini</button>
+                  <button class="period-btn" onclick="setPeriod('week', event)">Minggu Ini</button>
+                  <button class="period-btn" onclick="setPeriod('month', event)">Bulan Ini</button>
+                  <button class="period-btn" onclick="setPeriod('custom', event)">Custom</button>
+              </div>
+              <div class="date-range-picker" id="dateRangePicker" style="display: none;">
+                  <input type="date" class="date-input" id="startDate" onchange="updateCustomPeriod()">
+                  <span style="color: var(--text-secondary);">sampai</span>
+                  <input type="date" class="date-input" id="endDate" onchange="updateCustomPeriod()">
+              </div>
+              <button class="export-btn" onclick="exportData()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Export Data
+              </button>
+          </div>
+
+          <!-- Traffic Trend Chart - Line Chart -->
+          <div class="trend-chart-section">
+              <div class="chart-header">
+                  <div class="chart-title">Tren Arus Pejalan Kaki</div>
+                  <div class="chart-legend">
+                      <div class="legend-item">
+                          <div class="legend-color pedestrians"></div>
+                          <span>Jumlah Pejalan Kaki</span>
+                      </div>
+                      <div class="legend-item">
+                          <div class="legend-color peak"></div>
+                          <span>Jam Sibuk</span>
+                      </div>
+                  </div>
+              </div>
+              <div class="chart-container">
+                  <div class="chart-grid">
+                      <div class="grid-line"><div class="y-axis-label">400</div></div>
+                      <div class="grid-line"><div class="y-axis-label">300</div></div>
+                      <div class="grid-line"><div class="y-axis-label">200</div></div>
+                      <div class="grid-line"><div class="y-axis-label">100</div></div>
+                      <div class="grid-line"><div class="y-axis-label">0</div></div>
+                  </div>
+                  <svg class="chart-svg" id="chartSvg">
+                      <defs>
+                          <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" style="stop-color:var(--primary-color);stop-opacity:0.3" />
+                              <stop offset="100%" style="stop-color:var(--primary-color);stop-opacity:0" />
+                          </linearGradient>
+                      </defs>
+                  </svg>
+                  <div class="chart-tooltip" id="chartTooltip"></div>
+                  <div class="x-axis" id="chartXAxis">
+                      <!-- X-axis labels will be generated by JavaScript -->
+                  </div>
+              </div>
+          </div>
+
+          <div class="history-table">
+              <div class="table-header">
+                  <div class="table-title" id="tableTitle">Detail Harian</div>
+              </div>
+              <div class="table-content">
+                  <div class="table-row" id="tableHeader">
+                      <div class="table-cell"><strong>Tanggal</strong></div>
+                      <div class="table-cell"><strong>Total Crossing</strong></div>
+                      <div class="table-cell"><strong>Peak Hour</strong></div>
+                      <div class="table-cell"><strong>Avg Duration</strong></div>
+                  </div>
+                  <div id="historyTableData">
+                      <!-- Data will be populated by JavaScript -->
+                  </div>
+              </div>
+          </div>
+      </div>
+  </main>
+
+  <!-- System Info Page -->
+  <div class="system-info-page" id="systemInfoPage">
+      <button class="back-btn" onclick="showDashboard()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5"/>
+              <path d="M12 19l-7-7 7-7"/>
+          </svg>
+          Kembali ke Dashboard
+      </button>
+
+      <div class="info-header">
+          <h1 class="info-title">Smart Pedestrian Crossing</h1>
+          <p class="info-subtitle">Deteksi dan Pemantauan Penyeberang Jalan Berbasis Kamera</p>
+      </div>
+
+      <div class="info-section">
+          <h2 class="info-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v6l4 2"/>
+              </svg>
+              Urgensi Proyek
+          </h2>
+          <div class="info-content">
+              <p>Proyek ini penting untuk meningkatkan keselamatan pejalan kaki dengan sistem penyeberangan otomatis berbasis deteksi kamera dan people counting. Sistem ini membantu mengatur lampu lalu lintas secara responsif, menyediakan data real-time melalui dashboard web, serta mendukung implementasi Smart City.</p>
+          </div>
+      </div>
+
+      <div class="info-section">
+          <h2 class="info-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                  <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+              Ruang Lingkup Proyek
+          </h2>
+          <div class="info-content">
+              <ul class="info-list">
+                  <li>Sistem hanya difokuskan pada area penyeberangan jalan (zebra cross) di satu titik lokasi</li>
+                  <li>Deteksi hanya dilakukan terhadap pejalan kaki (tidak termasuk kendaraan atau hewan)</li>
+                  <li>Menggunakan kamera pengawas (tanpa sensor tambahan) sebagai input utama</li>
+                  <li>Pengambilan keputusan pengaktifan lampu penyeberangan berdasarkan analisis jumlah orang yang menunggu di sisi jalan</li>
+                  <li>Sistem terkoneksi dengan website (dashboard) untuk menampilkan data real-time people counting dan status lampu</li>
+                  <li>Fokus sistem adalah mendukung keamanan pejalan kaki, bukan sistem lalu lintas penuh</li>
+                  <li>Tidak mencakup kontrol kendaraan (seperti traffic light umum atau smart vehicle detection)</li>
+              </ul>
+          </div>
+      </div>
+
+      <div class="info-section">
+          <h2 class="info-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
+              </svg>
+              Output yang Diharapkan
+          </h2>
+          <div class="info-content">
+              <ul class="info-list">
+                  <li>Lampu penyeberangan otomatis menyala saat ada orang yang hendak menyeberang</li>
+                  <li>Jumlah pejalan kaki yang menyeberang tercatat otomatis</li>
+                  <li>Dashboard website yang menampilkan:
+                      <ul class="info-list" style="margin-left: 1rem;">
+                          <li>Grafik jumlah orang per hari/jam</li>
+                          <li>Status real-time lampu penyeberangan</li>
+                          <li>Tanggal & waktu penyeberangan</li>
+                      </ul>
+                  </li>
+              </ul>
+          </div>
+      </div>
+
+      <div class="info-section">
+          <h2 class="info-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20V10"/>
+                  <path d="M18 20V4"/>
+                  <path d="M6 20v-4"/>
+              </svg>
+              Bisnis Proses Sistem
+          </h2>
+          <div class="info-content">
+              <ol class="info-list">
+                  <li>Kamera 1 dan 2 melakukan pemantauan area zebra cross secara real-time</li>
+                  <li>Model deteksi objek (misalnya YOLO) memproses gambar video untuk mendeteksi keberadaan orang di area tunggu</li>
+                  <li>Jika orang terdeteksi secara konsisten selama 10 detik, sistem mengubah lampu penyeberangan menjadi hijau</li>
+                  <li>Saat pejalan kaki melewati garis counting, sistem menghitung jumlah pejalan kaki dan menyimpan ID serta waktu ke database</li>
+                  <li>Data jumlah pejalan kaki secara otomatis di-update ke tampilan website/dashboard</li>
+                  <li>Sistem terus memantau apakah masih ada orang yang terdeteksi di zebra cross</li>
+                  <li>Jika tidak ada lagi pejalan kaki yang terdeteksi, sistem mengubah lampu penyeberangan menjadi merah kembali</li>
+                  <li>Status lampu ini juga di-update ke dashboard web</li>
+                  <li>Semua data berjalan secara otomatis dan real-time, dapat dipantau oleh operator atau masyarakat melalui antarmuka web</li>
+              </ol>
+          </div>
+      </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="export-success" id="exportSuccess">
+      Data berhasil diexport!
+  </div>
+
+  <div class="modal-overlay" id="detailModal">
+      <div class="modal-content">
+          <div class="modal-header">
+              <div class="modal-title" id="modalTitle">Detail Informasi</div>
+              <button class="modal-close" onclick="closeModal()">&times;</button>
+          </div>
+          <div class="modal-grid" id="modalSummary">
+              <!-- Summary cards will be populated by JavaScript -->
+          </div>
+          
+          <div class="detail-section">
+              <div class="detail-section-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 20V10"></path>
+                      <path d="M12 20V4"></path>
+                      <path d="M6 20v-6"></path>
+                  </svg>
+                  Analisis Lalu Lintas Pejalan Kaki
+              </div>
+              <ul class="detail-list" id="trafficAnalysis">
+                  <!-- Traffic analysis will be populated by JavaScript -->
+              </ul>
+          </div>
+      </div>
+  </div>
+
+  <!-- <script src="/public/script.js"></script> -->
+   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <footer style="background: var(--surface-color); border-top: 1px solid var(--border-light); padding: 1rem 2rem; color: var(--text-muted); margin-top: 2rem;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+      <img src="/public/assets/logo_utama_fix.png" alt="Logo" style="width: 60px; height: 40px; border-radius: 8px;">
+      <div style="text-align: left;">
+        <div><small>&copy; 2025 Smart Pedestrian Crossing. Semua Hak Dilindungi.</small></div>
+        <div><small>Dikembangkan oleh Tim Informatika Universitas Pembangunan Jaya X PT. MarkTel</small></div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
