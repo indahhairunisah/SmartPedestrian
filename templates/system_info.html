@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informasi Sistem - Smart Pedestrian</title>
+  <style>
+    /* Disalin langsung dari dashboard.html: bagian system-info */
+    :root {
+      --primary-color: #2563eb;
+      --primary-dark: #1d4ed8;
+      --background-color: #ffffff;
+      --surface-color: #f8fafc;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --border-color: #e2e8f0;
+      --border-light: #f1f5f9;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-primary);
+      padding: 2rem;
+    }
+
+    .system-info-page {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .info-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: var(--surface-color);
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+    }
+
+    .info-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .info-subtitle {
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .info-section {
+      background: var(--surface-color);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+    }
+
+    .info-section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-content {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+
+    .info-list {
+      list-style: none;
+      margin: 1rem 0;
+    }
+
+    .info-list li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .info-list li::before {
+      content: '•';
+      color: var(--primary-color);
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+
+    .back-btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-dark);
+    }
+  </style>
+</head>
+<body>
+  <div class="system-info-page">
+    <a href="\dashboard" class="back-btn">
+      ← Kembali ke Dashboard
+    </a>
+
+    <div class="info-header">
+      <h1 class="info-title">Smart Pedestrian Crossing</h1>
+      <p class="info-subtitle">Deteksi dan Pemantauan Penyeberang Jalan Berbasis Kamera</p>
+    </div>
+
+    <div class="info-section">
+      <h2 class="info-section-title">📌 Urgensi Proyek</h2>
+      <div class="info-content">
+        <p>Proyek ini penting untuk meningkatkan keselamatan pejalan kaki dengan sistem penyeberangan otomatis berbasis deteksi kamera dan people counting...</p>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2 class="info-section-title">📦 Ruang Lingkup Proyek</h2>
+      <div class="info-content">
+        <ul class="info-list">
+          <li>Sistem hanya difokuskan pada area penyeberangan jalan (zebra cross) di satu titik lokasi</li>
+          <li>Deteksi hanya dilakukan terhadap pejalan kaki (tidak termasuk kendaraan atau hewan)</li>
+          <li>Menggunakan kamera pengawas (tanpa sensor tambahan) sebagai input utama</li>
+          <li>Pengambilan keputusan pengaktifan lampu penyeberangan berdasarkan analisis jumlah orang yang menunggu</li>
+          <li>Sistem terkoneksi dengan website (dashboard) untuk menampilkan data real-time</li>
+          <li>Fokus sistem adalah mendukung keamanan pejalan kaki</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2 class="info-section-title">📤 Output yang Diharapkan</h2>
+      <div class="info-content">
+        <ul class="info-list">
+          <li>Lampu penyeberangan otomatis menyala saat ada orang yang hendak menyeberang</li>
+          <li>Jumlah pejalan kaki yang menyeberang tercatat otomatis</li>
+          <li>
+            Dashboard website yang menampilkan:
+            <ul class="info-list" style="margin-left: 1rem">
+              <li>Grafik jumlah orang per hari/jam</li>
+              <li>Status real-time lampu penyeberangan</li>
+              <li>Tanggal & waktu penyeberangan</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2 class="info-section-title">🔁 Bisnis Proses Sistem</h2>
+      <div class="info-content">
+        <ol class="info-list">
+          <li>Kamera memantau zebra cross secara real-time</li>
+          <li>Model deteksi objek (YOLO) memproses video untuk mendeteksi orang</li>
+          <li>Jika terdeteksi selama 10 detik, sistem nyalakan lampu hijau</li>
+          <li>Sistem menghitung jumlah pejalan kaki dan simpan data ke database</li>
+          <li>Data otomatis ditampilkan di dashboard</li>
+          <li>Jika tidak ada orang, lampu kembali merah</li>
+          <li>Status terus diperbarui secara real-time</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1497,8 +1497,7 @@
       }
 
       .dropdown-content {
-        /* dropdown ke bawah */
-        /* display: none;
+        display: none;
         position: absolute;
         background-color: var(--background-color);
         min-width: 160px;
@@ -1506,24 +1505,10 @@
         border-radius: 10px;
         z-index: 1;
         top: 100%; /* Position below the button */
-        /* left: 0; */
-        /* margin-top: 0.5rem; Space between button and dropdown */
-        /* border: 1px solid var(--border-color); */
-        /* overflow: hidden; For rounded corners on items */
-
-        /* dropdown ke atas */
-        display: none;
-        position: absolute;
-        background-color: var(--background-color);
-        width: 75%; /*lebar tombol */
-        box-shadow: var(--shadow-md);
-        border-radius: 10px;
-        z-index: 1;
-        bottom: 100%; /* muncul ke atas */
         left: 0;
-        margin-bottom: 0.5rem; /* jarak dari tombol ke dropdown */
+        margin-top: 0.5rem; /* Space between button and dropdown */
         border: 1px solid var(--border-color);
-        overflow: hidden;
+        overflow: hidden; /* For rounded corners on items */
       }
 
       .dropdown-content a {
@@ -1643,12 +1628,12 @@
         <div class="live-cam-section">
           <h2 class="section-title">
             <span class="live-indicator"></span>
-            Live Kamera Penyebrangan Cam 1: Metro Indah Mall
+            Live Kamera Penyebrangan Cam 4: Metro
           </h2>
           <div class="cam-content">
             <div class="cam-container">
               <iframe src="http://192.168.202.168:8889/pedestrian/cam1" allow="autoplay; fullscreen"></iframe>
-              <div class="cam-overlay cam-overlay-right">Cam 1: Metro Indah Mall</div>
+              <div class="cam-overlay cam-overlay-right">Cam 4: Metro</div>
             </div>
 
             <div class="cam-info-section">
@@ -1850,8 +1835,7 @@
     </main>
 
     <!-- System Info Page -->
-     
-    <!-- <div class="system-info-page" id="systemInfoPage">
+    <div class="system-info-page" id="systemInfoPage">
       <button class="back-btn" onclick="showDashboard()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 12H5" />
@@ -1953,7 +1937,7 @@
           </ol>
         </div>
       </div>
-    </div> -->
+    </div>
 
     <!-- Detail Modal -->
     <div class="export-success" id="exportSuccess">Data berhasil diexport!</div>
@@ -2015,14 +1999,10 @@
         }
       }
 
-      // function showSystemInfo() {
-      //   document.getElementById('dashboardContent').style.display = 'none';
-      //   document.getElementById('systemInfoPage').classList.add('active');
-      // }
       function showSystemInfo() {
-        window.location.href = "\system_info";
+        document.getElementById('dashboardContent').style.display = 'none';
+        document.getElementById('systemInfoPage').classList.add('active');
       }
-
 
       function showDashboard() {
         document.getElementById('dashboardContent').style.display = 'block';

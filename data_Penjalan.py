@@ -51,7 +51,7 @@ latest_data = {
 
 MQTT_BROKER = "192.168.5.114"
 MQTT_PORT = 1883
-MQTT_TOPIC = "pedestrian/status"
+MQTT_TOPIC = "pedestrian/cam3"
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:

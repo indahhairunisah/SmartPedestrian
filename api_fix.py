@@ -168,7 +168,7 @@ def login():
         pwd = request.form['password']
         if uname == USER['username'] and pwd == USER['password']:
             session['user'] = uname
-            return redirect(url_for('halaman_utama'))
+            return redirect(url_for('dashboard'))
         else:
             return render_template('login.html', error="Username atau password salah")
     return render_template('login.html')

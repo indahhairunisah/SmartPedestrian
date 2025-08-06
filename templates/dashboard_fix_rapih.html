@@ -328,7 +328,6 @@
         display: flex;
         gap: 0.5rem;
         width: 100%;
-        height: 100%;
       }
 
       .cam-button,
@@ -343,8 +342,8 @@
         padding: 0.5rem 1em;
         border-radius: 10px;
         cursor: pointer;
-        font-weight: 600;
-        font-size: 1.2rem;
+        font-weight: 500;
+        font-size: 1rem;
         transition: all 0.3s ease;
         box-shadow: var(--shadow);
         color: var(--primary-color);
@@ -354,7 +353,6 @@
         justify-content: center;
         display: flex;
         width: 100%;
-        height: 50px;
       }
 
       .cam-button:hover {
@@ -381,7 +379,6 @@
         width: 30%;
         text-align: center;
         margin-top: 0rem;
-        align-items: center;
       }
 
       .cam-history-button:hover {
@@ -1487,62 +1484,6 @@
         color: var(--text-muted);
         text-align: center;
       }
-
-      /* Dropdown styles for "Lokasi Lainnya" */
-      .dropdown-container {
-        position: relative;
-        display: inline-block;
-        flex: 1; /* To make it take available space like the original button */
-        /* font-weight: 400; */
-      }
-
-      .dropdown-content {
-        /* dropdown ke bawah */
-        /* display: none;
-        position: absolute;
-        background-color: var(--background-color);
-        min-width: 160px;
-        box-shadow: var(--shadow-md);
-        border-radius: 10px;
-        z-index: 1;
-        top: 100%; /* Position below the button */
-        /* left: 0; */
-        /* margin-top: 0.5rem; Space between button and dropdown */
-        /* border: 1px solid var(--border-color); */
-        /* overflow: hidden; For rounded corners on items */
-
-        /* dropdown ke atas */
-        display: none;
-        position: absolute;
-        background-color: var(--background-color);
-        width: 75%; /*lebar tombol */
-        box-shadow: var(--shadow-md);
-        border-radius: 10px;
-        z-index: 1;
-        bottom: 100%; /* muncul ke atas */
-        left: 0;
-        margin-bottom: 0.5rem; /* jarak dari tombol ke dropdown */
-        border: 1px solid var(--border-color);
-        overflow: hidden;
-      }
-
-      .dropdown-content a {
-        color: var(--text-primary);
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: background-color 0.2s ease;
-      }
-
-      .dropdown-content a:hover {
-        background-color: var(--surface-secondary);
-      }
-
-      .dropdown-container.show .dropdown-content {
-        display: block;
-      }
     </style>
   </head>
   <body>
@@ -1643,42 +1584,17 @@
         <div class="live-cam-section">
           <h2 class="section-title">
             <span class="live-indicator"></span>
-            Live Kamera Penyebrangan Cam 1: Metro Indah Mall
+            Live Kamera Penyebrangan
           </h2>
           <div class="cam-content">
             <div class="cam-container">
-              <iframe src="http://192.168.202.168:8889/pedestrian/cam1" allow="autoplay; fullscreen"></iframe>
+              <iframe src="http://192.168.202.168:8889/pedestrian/cam3" allow="autoplay; fullscreen"></iframe>
               <div class="cam-overlay cam-overlay-right">Cam 1: Metro Indah Mall</div>
             </div>
 
             <div class="cam-info-section">
               <div class="cam-buttons">
-                <!-- Lokasi Lainnya Dropdown Button -->
-                <div class="dropdown-container" id="locationDropdown">
-                  <button class="cam-button" onclick="toggleDropdown(event)">
-                    <b>Lokasi Lainnya</b>
-                    <svg
-                      style="margin-left: 8px"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                  </button>
-                  <div class="dropdown-content">
-                    <a href="\halaman_utama">Halaman Utama</a>
-                    <a href="\dashboard">Camera 1: Metro Indah Mall</a>
-                    <a href="\dashboard_cam2">Camera 2: Braga</a>
-                    <a href="\dashboard_cam3">Camera 3: Kawaluyaan</a>
-                    <a href="\dashboard_cam4">Camera 4: Metro</a>
-                  </div>
-                </div>
+                <a href="#" class="cam-button">Lokasi Lainnya</a>
                 <a href="#" class="cam-history-button">Riwayat Penyebrangan</a>
               </div>
             </div>
@@ -1850,8 +1766,7 @@
     </main>
 
     <!-- System Info Page -->
-     
-    <!-- <div class="system-info-page" id="systemInfoPage">
+    <div class="system-info-page" id="systemInfoPage">
       <button class="back-btn" onclick="showDashboard()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 12H5" />
@@ -1953,7 +1868,7 @@
           </ol>
         </div>
       </div>
-    </div> -->
+    </div>
 
     <!-- Detail Modal -->
     <div class="export-success" id="exportSuccess">Data berhasil diexport!</div>
@@ -2015,14 +1930,10 @@
         }
       }
 
-      // function showSystemInfo() {
-      //   document.getElementById('dashboardContent').style.display = 'none';
-      //   document.getElementById('systemInfoPage').classList.add('active');
-      // }
       function showSystemInfo() {
-        window.location.href = "\system_info";
+        document.getElementById('dashboardContent').style.display = 'none';
+        document.getElementById('systemInfoPage').classList.add('active');
       }
-
 
       function showDashboard() {
         document.getElementById('dashboardContent').style.display = 'block';
@@ -2072,90 +1983,44 @@
         }
       }
 
-      // Helper function to get difference in days
-      function getDaysBetween(d1, d2) {
-        const date1 = new Date(d1);
-        const date2 = new Date(d2);
-        const diffTime = Math.abs(date2.getTime() - date1.getTime());
-        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      }
-
-      // Helper function to get difference in months
-      function getMonthsBetween(d1, d2) {
-        const date1 = new Date(d1);
-        const date2 = new Date(d2);
-        let months = (date2.getFullYear() - date1.getFullYear()) * 12;
-        months -= date1.getMonth();
-        months += date2.getMonth();
-        return months <= 0 ? 0 : months;
-      }
-
-      // Update fungsi generateChartData untuk menggunakan API dengan granularity dinamis
+      // Update fungsi generateChartData untuk menggunakan API
       async function generateChartData(period) {
         try {
           let apiUrl = `/api/grafik-periode?mode=${period}`;
-          let chartGranularity = 'daily'; // Default chart granularity
 
-          const startDate = document.getElementById('startDate').value;
-          const endDate = document.getElementById('endDate').value;
+          // Tambahkan parameter tanggal untuk custom period
+          if (period === 'custom') {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
 
-          if (period === 'month') {
-            chartGranularity = 'weekly'; // Bulan Ini -> Chart Mingguan
-          } else if (period === 'custom') {
-            if (startDate && endDate) {
-              const diffDays = getDaysBetween(startDate, endDate);
-              const diffMonths = getMonthsBetween(startDate, endDate);
-
-              if (diffDays <= 30) {
-                chartGranularity = 'daily'; // Custom < 30 hari -> Chart Harian
-              } else if (diffDays <= 90) {
-                chartGranularity = 'weekly'; // Custom > 30 hari -> Chart Mingguan
-              } else if (diffMonths > 3) {
-                chartGranularity = 'monthly'; // Custom > 3 bulan -> Chart Bulanan
-              }
+            if (!startDate || !endDate) {
+              console.warn('Custom period selected but dates not provided');
+              return;
             }
-          }
 
-          apiUrl += `&granularity=${chartGranularity}`;
-
-          // Add date parameters for custom period
-          if (period === 'custom' && startDate && endDate) {
             apiUrl += `&start=${startDate}&end=${endDate}`;
-          } else if (period === 'month') {
-            // For 'month' period, send the current month's start and end dates
-            const today = new Date();
-            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-            const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-            apiUrl += `&start=${startOfMonth.toISOString().split('T')[0]}&end=${endOfMonth.toISOString().split('T')[0]}`;
-          } else if (period === 'week') {
-            // For 'week' period, send the current week's start and end dates
-            const today = new Date();
-            const dayOfWeek = today.getDay(); // 0 for Sunday, 1 for Monday, etc.
-            const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust to Monday
-            const startOfWeek = new Date(today.setDate(diff));
-            const endOfWeek = new Date(today.setDate(today.getDate() + 6));
-            apiUrl += `&start=${startOfWeek.toISOString().split('T')[0]}&end=${endOfWeek.toISOString().split('T')[0]}`;
-          } else if (period === 'today') {
-            // For 'today' period, send today's date
-            apiUrl += `&start=${new Date().toISOString().split('T')[0]}&end=${new Date().toISOString().split('T')[0]}`;
           }
-
 
           const response = await fetch(apiUrl);
           const data = await response.json();
 
           if (!data.success) {
             console.error('API Error:', data.error);
-            generateDummyChartData(period, chartGranularity); // Pass granularity to dummy
+            generateDummyChartData(period);
             return;
           }
 
+          // Reset chartData
           chartData = [];
+
+          // Populate chartData dengan data dari API
           for (let i = 0; i < data.labels.length; i++) {
             const label = data.labels[i];
             const crossingValue = data.data_crossings[i] || 0;
             const durationValue = data.data_durations[i] || 0;
-            const isPeak = data.jam_sibuk === label; // Assuming jam_sibuk matches label format
+
+            // Tentukan apakah ini peak period
+            const isPeak = data.jam_sibuk === label;
 
             chartData.push({
               label: label,
@@ -2167,9 +2032,9 @@
                 totalCrossings: crossingValue,
                 avgDuration: `${durationValue}s`,
                 peakHour: data.jam_sibuk || 'N/A',
-                systemUptime: '98%',
-                detectionAccuracy: '95%',
-                responseTime: '150ms',
+                systemUptime: '98%', // Static for now
+                detectionAccuracy: '95%', // Static for now
+                responseTime: '150ms', // Static for now
                 maintenanceStatus: 'Normal',
                 avgWaitTime: `${Math.floor(durationValue * 0.8)}s`,
                 peakTrafficDuration: '45 menit',
@@ -2177,66 +2042,36 @@
             });
           }
 
-          console.log(`✅ Chart data loaded for ${period} (granularity: ${chartGranularity}):`, chartData);
+          console.log(`✅ Chart data loaded for ${period}:`, chartData);
         } catch (error) {
           console.error('❌ Error fetching chart data:', error);
-          generateDummyChartData(period, 'daily'); // Fallback to daily dummy if API fails
+
+          // Fallback ke data dummy jika API gagal
+          generateDummyChartData(period);
         }
       }
 
-      // Fungsi fallback untuk data dummy (updated to accept granularity)
-      function generateDummyChartData(period, granularity) {
+      // Fungsi fallback untuk data dummy
+      function generateDummyChartData(period) {
         chartData = [];
         let dataPoints, labels;
 
-        const today = new Date();
-        const currentMonth = today.getMonth();
-        const currentYear = today.getFullYear();
-
-        switch (granularity) {
-          case 'daily':
-            if (period === 'today') {
-              labels = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
-              dataPoints = [45, 120, 85, 95, 110, 180, 220, 90];
-            } else if (period === 'week') {
-              labels = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-              dataPoints = [280, 320, 290, 310, 350, 180, 150];
-            } else if (period === 'month') {
-              // Generate daily labels for the current month
-              const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-              labels = Array.from({ length: daysInMonth }, (_, i) => `${i + 1} ${new Date(currentYear, currentMonth, i + 1).toLocaleString('id-ID', { month: 'short' })}`);
-              dataPoints = Array.from({ length: daysInMonth }, () => Math.floor(Math.random() * 100) + 20);
-            } else if (period === 'custom') {
-              const startDate = new Date(document.getElementById('startDate').value);
-              const endDate = new Date(document.getElementById('endDate').value);
-              const diffDays = getDaysBetween(startDate, endDate);
-              labels = Array.from({ length: diffDays + 1 }, (_, i) => new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }));
-              dataPoints = Array.from({ length: diffDays + 1 }, () => Math.floor(Math.random() * 150) + 30);
-            }
+        switch (period) {
+          case 'today':
+            labels = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
+            dataPoints = [45, 120, 85, 95, 110, 180, 220, 90];
             break;
-          case 'weekly':
+          case 'week':
+            labels = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+            dataPoints = [280, 320, 290, 310, 350, 180, 150];
+            break;
+          case 'month':
             labels = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'];
             dataPoints = [1850, 2100, 1950, 2200];
-            if (period === 'custom') {
-              const startDate = new Date(document.getElementById('startDate').value);
-              const endDate = new Date(document.getElementById('endDate').value);
-              const diffDays = getDaysBetween(startDate, endDate);
-              const numWeeks = Math.ceil(diffDays / 7);
-              labels = Array.from({ length: numWeeks }, (_, i) => `Week ${i + 1}`);
-              dataPoints = Array.from({ length: numWeeks }, () => Math.floor(Math.random() * 1500) + 500);
-            }
             break;
-          case 'monthly':
-            labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            dataPoints = [5000, 5500, 6000, 6200, 5800, 6500, 7000, 6800, 6300, 5900, 5400, 5100];
-            if (period === 'custom') {
-              const startDate = new Date(document.getElementById('startDate').value);
-              const endDate = new Date(document.getElementById('endDate').value);
-              const diffMonths = getMonthsBetween(startDate, endDate);
-              labels = Array.from({ length: diffMonths + 1 }, (_, i) => new Date(startDate.getFullYear(), startDate.getMonth() + i, 1).toLocaleString('id-ID', { month: 'short', year: 'numeric' }));
-              dataPoints = Array.from({ length: diffMonths + 1 }, () => Math.floor(Math.random() * 6000) + 2000);
-            }
-            break;
+          default:
+            labels = ['Data 1', 'Data 2', 'Data 3', 'Data 4', 'Data 5'];
+            dataPoints = [150, 200, 180, 220, 190];
         }
 
         for (let i = 0; i < labels.length; i++) {
@@ -2250,7 +2085,7 @@
           });
         }
 
-        console.log('⚠️ Using dummy data for', period, '(granularity:', granularity, ')');
+        console.log('⚠️ Using dummy data for', period);
       }
 
       function generateDetailData(label, value, period) {
@@ -2388,8 +2223,8 @@
         try {
           // Update chart and table with real data
           await generateChartData(period);
-          await updateHistoryTable(period); // Call updateHistoryTable separately for daily details
-          updateChart(); // Update chart after data is ready
+          updateChart();
+          await updateHistoryTable(period);
         } catch (error) {
           console.error('Error updating period:', error);
         } finally {
@@ -2401,14 +2236,44 @@
         const tableTitle = document.getElementById('tableTitle');
         const tableHeader = document.getElementById('tableHeader');
 
-        // Table always shows daily details
-        tableTitle.textContent = 'Detail Harian';
-        tableHeader.innerHTML = `
-            <div class="table-cell"><strong>Tanggal</strong></div>
-            <div class="table-cell"><strong>Total Crossing</strong></div>
-            <div class="table-cell"><strong>Peak Hour</strong></div>
-            <div class="table-cell"><strong>Avg Duration</strong></div>
-        `;
+        switch (period) {
+          case 'today':
+            tableTitle.textContent = 'Detail Per Jam';
+            tableHeader.innerHTML = `
+                        <div class="table-cell"><strong>Jam</strong></div>
+                        <div class="table-cell"><strong>Total Crossing</strong></div>
+                        <div class="table-cell"><strong>Peak Period</strong></div>
+                        <div class="table-cell"><strong>Total Duration</strong></div>
+                    `;
+            break;
+          case 'week':
+            tableTitle.textContent = 'Detail Harian';
+            tableHeader.innerHTML = `
+                        <div class="table-cell"><strong>Hari</strong></div>
+                        <div class="table-cell"><strong>Avg Crossing</strong></div>
+                        <div class="table-cell"><strong>Peak Hour</strong></div>
+                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                    `;
+            break;
+          case 'month':
+            tableTitle.textContent = 'Detail Harian';
+            tableHeader.innerHTML = `
+                        <div class="table-cell"><strong>Tanggal</strong></div>
+                        <div class="table-cell"><strong>Avg Crossing</strong></div>
+                        <div class="table-cell"><strong>Peak Hour</strong></div>
+                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                    `;
+            break;
+          case 'custom':
+            tableTitle.textContent = 'Detail Periode';
+            tableHeader.innerHTML = `
+                        <div class="table-cell"><strong>Periode</strong></div>
+                        <div class="table-cell"><strong>Avg Crossing</strong></div>
+                        <div class="table-cell"><strong>Peak Hour</strong></div>
+                        <div class="table-cell"><strong>Avg Duration</strong></div>
+                    `;
+            break;
+        }
       }
 
       // Update fungsi updateCustomPeriod untuk menggunakan async/await
@@ -2421,8 +2286,8 @@
 
           try {
             await generateChartData('custom');
-            await updateHistoryTable('custom');
             updateChart();
+            await updateHistoryTable('custom');
           } catch (error) {
             console.error('Error updating custom period:', error);
           } finally {
@@ -2471,75 +2336,28 @@
         }
       }
 
-      // Update fungsi updateHistoryTable untuk menggunakan data real (always daily granularity)
+      // Update fungsi updateHistoryTable untuk menggunakan data real
       async function updateHistoryTable(period) {
-        const tableDataElement = document.getElementById('historyTableData');
+        const tableData = document.getElementById('historyTableData');
         let rows = '';
 
         try {
-          let apiUrl = `/api/grafik-periode?granularity=daily`; // Always request daily for table
-
-          const startDate = document.getElementById('startDate').value;
-          const endDate = document.getElementById('endDate').value;
-
-          if (period === 'custom' && startDate && endDate) {
-            apiUrl += `&start=${startDate}&end=${endDate}`;
-          } else if (period === 'month') {
-            const today = new Date();
-            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-            const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-            apiUrl += `&start=${startOfMonth.toISOString().split('T')[0]}&end=${endOfMonth.toISOString().split('T')[0]}`;
-          } else if (period === 'week') {
-            const today = new Date();
-            const dayOfWeek = today.getDay();
-            const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
-            const startOfWeek = new Date(today.setDate(diff));
-            const endOfWeek = new Date(today.setDate(today.getDate() + 6));
-            apiUrl += `&start=${startOfWeek.toISOString().split('T')[0]}&end=${endOfWeek.toISOString().split('T')[0]}`;
-          } else if (period === 'today') {
-            apiUrl += `&start=${new Date().toISOString().split('T')[0]}&end=${new Date().toISOString().split('T')[0]}`;
-          }
-
-          const response = await fetch(apiUrl);
-          const data = await response.json();
-
-          if (data.success && data.labels && data.labels.length > 0) {
-            for (let i = 0; i < data.labels.length; i++) {
-              const label = data.labels[i];
-              const crossingValue = data.data_crossings[i] || 0;
-              const durationValue = data.data_durations[i] || 0;
-              const peakHour = data.jam_sibuk || 'N/A'; // Assuming jam_sibuk is available for daily
-
-              const detailData = {
-                label: label,
-                value: crossingValue,
-                duration: durationValue,
-                isPeak: false, // Not relevant for table detail, but keep structure
-                details: {
-                  date: label,
-                  totalCrossings: crossingValue,
-                  avgDuration: `${durationValue}s`,
-                  peakHour: peakHour,
-                  systemUptime: '98%',
-                  detectionAccuracy: '95%',
-                  responseTime: '150ms',
-                  maintenanceStatus: 'Normal',
-                  avgWaitTime: `${Math.floor(durationValue * 0.8)}s`,
-                  peakTrafficDuration: '45 menit',
-                },
-              };
-              const detailDataStr = JSON.stringify(detailData).replace(/"/g, '&quot;');
+          // Gunakan data dari chartData yang sudah di-load
+          if (chartData && chartData.length > 0) {
+            chartData.forEach((data) => {
+              const detailDataStr = JSON.stringify(data).replace(/"/g, '&quot;');
 
               rows += `
                             <div class="table-row" onclick="showDetailModal(${detailDataStr})">
-                                <div class="table-cell">${label}</div>
-                                <div class="table-cell">${crossingValue}</div>
-                                <div class="table-cell">${peakHour}</div>
-                                <div class="table-cell">${durationValue}s</div>
+                                <div class="table-cell">${data.label}</div>
+                                <div class="table-cell">${data.value}</div>
+                                <div class="table-cell">${data.details.peakHour}</div>
+                                <div class="table-cell">${data.details.avgDuration}</div>
                             </div>
                         `;
-            }
+            });
           } else {
+            // Jika tidak ada data, tampilkan pesan
             rows = `
                         <div class="table-row">
                             <div class="table-cell" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">
@@ -2549,10 +2367,10 @@
                     `;
           }
 
-          tableDataElement.innerHTML = rows;
+          tableData.innerHTML = rows;
         } catch (error) {
           console.error('Error updating history table:', error);
-          tableDataElement.innerHTML = `
+          tableData.innerHTML = `
                     <div class="table-row">
                         <div class="table-cell" style="grid-column: 1 / -1; text-align: center; color: var(--danger-color);">
                             Error memuat data
@@ -2581,7 +2399,6 @@
 
         try {
           // Fetch detail data dari API
-          // Assuming /api/detail-periode can return details for a specific label/period
           const response = await fetch(`/api/detail-periode?mode=${currentPeriod}&periode=${encodeURIComponent(data.label)}`);
           const detailData = await response.json();
 
@@ -2690,34 +2507,14 @@
           try {
             console.log('🔄 Auto-refreshing chart data...');
             await generateChartData(currentPeriod);
-            await updateHistoryTable(currentPeriod);
             updateChart();
+            await updateHistoryTable(currentPeriod);
             console.log('✅ Chart auto-refresh completed');
           } catch (error) {
             console.error('❌ Chart auto-refresh failed:', error);
           }
         }, 30000); // 30 seconds
       }
-
-      // Dropdown functions
-      function toggleDropdown(event) {
-        const dropdownContainer = document.getElementById('locationDropdown');
-        dropdownContainer.classList.toggle('show');
-        event.stopPropagation(); // Prevent click from immediately closing dropdown
-      }
-
-      // Close the dropdown if the user clicks outside of it
-      window.onclick = function (event) {
-        if (!event.target.matches('.cam-button')) {
-          const dropdowns = document.getElementsByClassName('dropdown-container');
-          for (let i = 0; i < dropdowns.length; i++) {
-            const openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-              openDropdown.classList.remove('show');
-            }
-          }
-        }
-      };
 
       // Load saved theme and initialize
       document.addEventListener('DOMContentLoaded', async function () {
@@ -2742,10 +2539,10 @@
         } catch (error) {
           console.error('❌ Error initializing dashboard:', error);
           // Fallback ke data dummy
-          generateDummyChartData('today', 'daily');
+          generateDummyChartData('today');
           updateChart();
           updateTableTitleAndHeader('today');
-          generateDummyDailyTableData('today'); // Generate dummy daily data for table
+          updateHistoryTable('today');
         }
 
         // Start time updates
@@ -2767,6 +2564,13 @@
             .then((data) => {
               updateTrafficLight(data.status);
               document.getElementById('peopleCount').innerText = data.count_middle;
+              // The original code had a bug here, assuming data.status is 'STOP' or 'WALK'
+              // and mapping it to an index. I'll keep the original logic but note it.
+              // The image shows "Jalan" for Status Penyebrangan, which is not directly 'STOP' or 'WALK'.
+              // I've adjusted updateTrafficLight to set 'Jalan'/'Berhenti' based on light status.
+              // The original line: const lightColors = ['status-red', 'status-green'];
+              // The original line: lightElement.className = 'status-value ' + lightColors[data.status === 'STOP' ? 0 : 1];
+              // This is now handled within updateTrafficLight.
               document.getElementById('waitTime').innerText = data.crossing_duration + ' detik';
             })
             .catch((error) => console.error('❌ Error fetching status:', error));
@@ -2809,7 +2613,7 @@
         try {
           // Note: This WebSocket connection will only work if the IP address is accessible from the client's browser.
           // In a sandboxed environment or if the IP is internal, it might not connect.
-          const ws = new WebSocket('ws://192.168.202.168:8888');
+          const ws = new WebSocket('ws://192.168.202.168:8765');
           ws.onmessage = (event) => {
             const frameBase64 = event.data;
             // Assuming there's an <img> tag with id="livecam" for the video stream
@@ -2828,89 +2632,6 @@
         // Start chart auto-refresh
         startChartAutoRefresh();
       });
-
-      // Dummy function for table data when API fails for table
-      function generateDummyDailyTableData(period) {
-        const tableDataElement = document.getElementById('historyTableData');
-        let rows = '';
-        let dummyDailyData = [];
-
-        const today = new Date();
-        const currentMonth = today.getMonth();
-        const currentYear = today.getFullYear();
-
-        if (period === 'today') {
-          // Hourly data for today
-          dummyDailyData = Array.from({ length: 24 }, (_, i) => ({
-            label: `${i.toString().padStart(2, '0')}:00`,
-            value: Math.floor(Math.random() * 50) + 10,
-            duration: Math.floor(Math.random() * 20) + 25,
-            peakHour: `${Math.floor(Math.random() * 4) + 16}:${(Math.floor(Math.random() * 6) * 10).toString().padStart(2, '0')}`,
-          }));
-        } else if (period === 'week') {
-          // Daily data for the current week
-          const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-          dummyDailyData = Array.from({ length: 7 }, (_, i) => ({
-            label: days[i],
-            value: Math.floor(Math.random() * 300) + 100,
-            duration: Math.floor(Math.random() * 20) + 25,
-            peakHour: `${Math.floor(Math.random() * 4) + 16}:${(Math.floor(Math.random() * 6) * 10).toString().padStart(2, '0')}`,
-          }));
-        } else if (period === 'month') {
-          // Daily data for the current month
-          const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-          dummyDailyData = Array.from({ length: daysInMonth }, (_, i) => ({
-            label: `${i + 1} ${new Date(currentYear, currentMonth, i + 1).toLocaleString('id-ID', { month: 'short' })}`,
-            value: Math.floor(Math.random() * 150) + 30,
-            duration: Math.floor(Math.random() * 20) + 25,
-            peakHour: `${Math.floor(Math.random() * 4) + 16}:${(Math.floor(Math.random() * 6) * 10).toString().padStart(2, '0')}`,
-          }));
-        } else if (period === 'custom') {
-          const startDate = new Date(document.getElementById('startDate').value);
-          const endDate = new Date(document.getElementById('endDate').value);
-          const diffDays = getDaysBetween(startDate, endDate);
-          dummyDailyData = Array.from({ length: diffDays + 1 }, (_, i) => ({
-            label: new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
-            value: Math.floor(Math.random() * 150) + 30,
-            duration: Math.floor(Math.random() * 20) + 25,
-            peakHour: `${Math.floor(Math.random() * 4) + 16}:${(Math.floor(Math.random() * 6) * 10).toString().padStart(2, '0')}`,
-          }));
-        }
-
-        dummyDailyData.forEach((data) => {
-          const detailData = {
-            label: data.label,
-            value: data.value,
-            duration: data.duration,
-            isPeak: false,
-            details: {
-              date: data.label,
-              totalCrossings: data.value,
-              avgDuration: `${data.duration}s`,
-              peakHour: data.peakHour,
-              systemUptime: '98%',
-              detectionAccuracy: '95%',
-              responseTime: '150ms',
-              maintenanceStatus: 'Normal',
-              avgWaitTime: `${Math.floor(data.duration * 0.8)}s`,
-              peakTrafficDuration: '45 menit',
-            },
-          };
-          const detailDataStr = JSON.stringify(detailData).replace(/"/g, '&quot;');
-
-          rows += `
-                    <div class="table-row" onclick="showDetailModal(${detailDataStr})">
-                        <div class="table-cell">${data.label}</div>
-                        <div class="table-cell">${data.value}</div>
-                        <div class="table-cell">${data.peakHour}</div>
-                        <div class="table-cell">${data.duration}s</div>
-                    </div>
-                `;
-        });
-        tableDataElement.innerHTML = rows;
-        console.log('⚠️ Using dummy daily data for table');
-      }
-
 
       function exportData() {
         // Placeholder for export logic

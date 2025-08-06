@@ -11,7 +11,7 @@
             --primary-blue-light: #6366F1;
             --primary-blue-dark: #3730A3;
             --gradient-start: #667eea;
-            --gradient-end: #764ba2;
+            --gradient-end: #f2f0f5;
             --white: #ffffff;
             --gray-50: #f9fafb;
             --gray-100: #f3f4f6;
@@ -52,7 +52,7 @@
         /* Left Side - Illustration */
         .left-side {
             flex: 1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #dfdbe3 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -69,7 +69,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.9) 0%, rgba(99, 102, 241, 0.8) 50%, rgba(139, 92, 246, 0.9) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 4%, rgba(68, 70, 218, 0.8) 60%, rgba(79, 70, 229, 0.9) 100%);
             z-index: 1;
         }
 
@@ -204,21 +204,6 @@
             transform: translateY(0);
             box-shadow: var(--shadow);
         }
-
-        /* .forgot-password {
-            color: var(--gray-500);
-            font-size: 0.875rem;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-            margin-top: -0.2rem;
-            cursor: pointer;
-        } */
-
-        /* .forgot-password:hover {
-            color: var(--primary-blue);
-        } */
-
         .bottom-logo-container {
             align-items: center;
             position: fixed;
@@ -343,49 +328,6 @@
             animation: slideOutUp 0.3s ease-in 4.7s forwards;
         }
 
-        /* Forgot Password Modal Styles */
-        /* .forgot-password-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        .forgot-password-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .forgot-password-modal {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 2.5rem;
-            width: 90%;
-            max-width: 450px;
-            margin: 1rem;
-            box-shadow: var(--shadow-xl);
-            border: 1px solid var(--gray-200);
-            transform: scale(0.9) translateY(20px);
-            transition: all 0.3s ease;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .forgot-password-overlay.show .forgot-password-modal {
-            transform: scale(1) translateY(0);
-        } */
-
         .modal-close-btn {
             position: absolute;
             top: 1rem;
@@ -410,120 +352,6 @@
             background: var(--gray-100);
             color: var(--gray-600);
         }
-
-        /* .forgot-password-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .forgot-password-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            box-shadow: var(--shadow-md);
-        } */
-
-        /* .forgot-password-icon svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-
-        .forgot-password-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--gray-900);
-            margin-bottom: 0.5rem;
-        }
-
-        .forgot-password-subtitle {
-            color: var(--gray-500);
-            font-size: 0.875rem;
-            line-height: 1.5;
-        }
-
-        .forgot-password-form {
-            margin-bottom: 1.5rem;
-        }
-
-        .forgot-password-input {
-            width: 100%;
-            padding: 1rem 1.25rem;
-            border: 2px solid var(--gray-200);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--gray-900);
-            background: var(--white);
-            transition: all 0.2s ease;
-            outline: none;
-            margin-bottom: 1.5rem;
-        }
-
-        .forgot-password-input::placeholder {
-            color: var(--gray-400);
-            font-weight: 400;
-        }
-
-        .forgot-password-input:focus {
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-            transform: translateY(-1px);
-        }
-
-        .forgot-password-input:hover {
-            border-color: var(--gray-300);
-        }
-
-        .forgot-password-submit {
-            width: 100%;
-            padding: 1rem 1.25rem;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
-            color: var(--white);
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-md);
-            letter-spacing: 0.01em;
-            position: relative;
-        }
-
-        .forgot-password-submit:hover {
-            background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-blue) 100%);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .forgot-password-submit:active {
-            transform: translateY(0);
-            box-shadow: var(--shadow);
-        }
-
-        .forgot-password-submit.loading {
-            color: transparent;
-        }
-
-        .forgot-password-submit.loading::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid transparent;
-            border-top: 2px solid var(--white);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        } */
 
         .back-to-login {
             text-align: center;
@@ -663,13 +491,7 @@
             .login-form-container {
                 max-width: 100%;
             }
-            /* .forgot-password-modal {
-                padding: 2rem 1.5rem;
-                margin: 0.5rem;
-            }
-            .forgot-password-title {
-                font-size: 1.25rem;
-            } */
+            
             .error-message {
                 padding: 0.625rem 0.875rem;
                 font-size: 0.8125rem;
@@ -706,12 +528,9 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Focus styles for accessibility */
         .form-input:focus-visible,
         .login-button:focus-visible,
-        /* .forgot-password:focus-visible,
-        .forgot-password-input:focus-visible,
-        .forgot-password-submit:focus-visible, */
+       
         .modal-close-btn:focus-visible,
         .error-close:focus-visible {
             outline: 2px solid var(--primary-blue);
